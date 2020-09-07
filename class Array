@@ -1,0 +1,93 @@
+#include <iostream>
+
+class Array {
+
+public:
+
+    Array(){
+        size = 0;
+        allocated = 1;
+        mem = new int[allocated];
+    }
+
+    Array(int initial_allocated) {      //constructor
+        allocated = initial_allocated;
+        mem = new int[initial_allocated];
+    }
+
+    Array(const Array& old_array) {     //copy constructor
+            size = old_array.size;
+            allocated = old_array.allocated;
+            mem = new int[allocated];
+            for (int i = 0; i < size; ++i) {
+                mem[i] = old_array.mem[i];
+        }
+    }
+
+    ~Array() {  //destructor
+        delete mem;
+    }
+
+    Array& operator= (const Array& old_array){      //equal operator
+        size = old_array.size;
+        allocated = old_array.allocated;
+        mem = new int[allocated];
+        for (int i = 0; i < size; ++i) {
+            mem[i] = old_array.mem[i];
+        }
+        return *this;
+    }
+
+    int& operator[] (int i) {       //index operator
+        return mem[i];
+    }
+
+     int* take_number(int i){        //taking element with index i
+        return &mem[i];
+    }
+
+     void add_number_to_array(int number) {
+        if(size == allocated) {
+            int* tmp = new int;
+            if (nullptr == tmp){
+                assert(nullptr != tmp);
+                return;
+            }
+            mem = tmp;
+            allocated+=1;
+        }
+        mem[++size] = number;
+    }
+
+private:
+    int size = 0;
+    int * mem = nullptr;
+    int allocated = 0;
+};
+
+void read_array() {
+    int number = 0;
+    Array a(12);
+    FILE *f = fopen("input.txt", "r");
+    if (!f) {
+        return;
+    }
+    while(1 == fscanf(f, "%d", number)) {
+        a.add_number_to_array(number);
+    }
+    int* b = a.take_number(4);
+    printf("%d", &b);
+    fclose(f);
+}
+
+int main() {
+    int size = 10;
+    Array a (size);
+    int sum_of_array;
+    for (int i = 0; i < size; ++i) {
+        a[i] = i;
+        sum_of_array+=a[i];
+    }
+    printf("sum = %d \n", sum_of_array);
+    return 0;
+}
