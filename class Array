@@ -51,6 +51,7 @@ public:
             int* tmp = new int;
             if (nullptr == tmp){
                 assert(nullptr != tmp);
+                delete mem;
                 return;
             }
             mem = tmp;
@@ -77,6 +78,7 @@ void read_array() {
     }
     int* b = a.take_number(4);
     printf("%d", &b);
+
     fclose(f);
 }
 
