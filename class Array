@@ -42,8 +42,8 @@ public:
         return mem[i];
     }
 
-     int* take_number(int i){        //taking element with index i
-        return &mem[i];
+     int& take_number(int i){        //taking element with index i
+        return mem[i];
     }
 
      void add_number_to_array(int number) {
@@ -76,9 +76,6 @@ void read_array() {
     while(1 == fscanf(f, "%d", number)) {
         a.add_number_to_array(number);
     }
-    int* b = a.take_number(4);
-    printf("%d", &b);
-
     fclose(f);
 }
 
