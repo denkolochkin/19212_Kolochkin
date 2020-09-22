@@ -1,0 +1,99 @@
+#include <iostream>
+struct A {
+    A() {
+        //std::cout << "Ctor" << std::endl;
+    }
+    A(int i) {
+        std::cout << "Int" << i << std::endl;
+    }
+    ~A() {
+        //std::cout << "Dtor" << std::endl;
+    }
+    A(const A&) { std::cout << "Copy" << std::endl;}
+    A& operator=(const A&){ std::cout << "assign" << std::endl; return *this;}
+
+    void hello(){std::cout<<"hello"<<std::endl;}
+
+};
+
+class SmartPtr {
+public:
+    SmartPtr() {
+        a_ = new(A);
+        count_ptr = 1;
+
+    };
+    SmartPtr(A * a) : a_(a) {
+         a_ = new(A);
+         count_ptr = 1;
+         std::cout<<"Ctor"<<std::endl;
+    }
+    ~SmartPtr() {
+        if (count_ptr > 1){
+            count_ptr--;
+        }
+        else {
+            delete a_;
+            std::cout<<"Dtor"<<std::endl;
+        }
+    }
+
+    SmartPtr(const SmartPtr& temp) {
+        a_ = temp.a_;
+        count_ptr = temp.count_ptr;
+        count_ptr++;
+    };   //конструктор копирования
+
+    //todo счётчик ссылок - shared_pointer
+
+    SmartPtr& operator=(const SmartPtr& temp) {
+        if (count_ptr > 1){
+            count_ptr--;
+        }
+        else {
+            delete a_;
+        }
+        a_ = temp.a_;
+        count_ptr = temp.count_ptr;
+        count_ptr++;
+        return *this;
+    };
+
+    A& operator*() {
+        assert(a_);
+        return *a_;
+    }
+
+    A* operator->() {
+        return a_;
+    }
+
+    A* release() {
+        /*отдаёт владение указателем |a_| */
+        A* a = a_;
+        a_ = nullptr;
+        return a;
+    }
+
+    void* reset(A* x) {
+        /*берёт владение указателем |x| */
+        delete a_;
+        a_ = x;
+    }
+
+    A* get() { return a_; }
+
+private:
+    A * a_;
+    int count_ptr;
+};
+
+
+int main() {
+    A c;
+
+    SmartPtr p2(&c);
+    SmartPtr p3(&c);
+
+
+}
