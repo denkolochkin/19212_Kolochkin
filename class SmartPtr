@@ -1,19 +1,11 @@
 #include <iostream>
 struct A {
-    A() {
-        //std::cout << "Ctor" << std::endl;
-    }
-    A(int i) {
-        std::cout << "Int" << i << std::endl;
-    }
-    ~A() {
-        //std::cout << "Dtor" << std::endl;
-    }
+    A() {std::cout << "Ctor" << std::endl;}
+    A(int i) {std::cout << "Int" << i << std::endl;}
+    ~A() {std::cout << "Dtor" << std::endl;}
     A(const A&) { std::cout << "Copy" << std::endl;}
     A& operator=(const A&){ std::cout << "assign" << std::endl; return *this;}
-
     void hello(){std::cout<<"hello"<<std::endl;}
-
 };
 
 class SmartPtr {
@@ -26,7 +18,6 @@ public:
     SmartPtr(A * a) : a_(a) {
          a_ = new(A);
          count_ptr = 1;
-         std::cout<<"Ctor"<<std::endl;
     }
     ~SmartPtr() {
         if (count_ptr > 1){
@@ -34,7 +25,6 @@ public:
         }
         else {
             delete a_;
-            std::cout<<"Dtor"<<std::endl;
         }
     }
 
@@ -42,9 +32,7 @@ public:
         a_ = temp.a_;
         count_ptr = temp.count_ptr;
         count_ptr++;
-    };   //конструктор копирования
-
-    //todo счётчик ссылок - shared_pointer
+    };
 
     SmartPtr& operator=(const SmartPtr& temp) {
         if (count_ptr > 1){
@@ -90,10 +78,9 @@ private:
 
 
 int main() {
-    A c;
-
-    SmartPtr p2(&c);
-    SmartPtr p3(&c);
-
-
+    A temp;
+    SmartPtr p1(&temp);
+    SmartPtr p2(&temp);
+    SmartPtr p3(p2);
+    p3 = p1;
 }
