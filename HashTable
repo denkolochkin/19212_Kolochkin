@@ -1,9 +1,7 @@
 #include <iostream>
 #include <math.h>
-
+#include <string>
 using namespace std;
-
-
 
 // В этой задаче для простоты не требуется делать контейнер шаблонным,
 // это допускается по желанию. Для нешаблонного решения,
@@ -13,130 +11,135 @@ using namespace std;
 typedef std::string Key;
 
 struct Value {
-  unsigned age;
-  unsigned weight;
+    unsigned age;
+    unsigned weight;
+    Value(unsigned age_, unsigned weight_): age(age_), weight(weight_){};
 };
 
-class HashTable
-{
+struct Node {
+    string Key;
+    Value value;
+    Node *next;
+    Node(string Key_, Value value_, Node* next_) :Key(Key_), value(value_), next(next_){};
+};
+
+class HashTable {
 public:
+    HashTable() {
+        table_size = 3;
+        current_table_size = 0;
+        fill_factor = static_cast<float>(current_table_size) / static_cast<float>(table_size);
+        std::fill(nodes,nodes+table_size, nullptr);
+        // std::fill ???
+    };
+    ~HashTable(){};
 
-  HashTable() {
-      table_size = 17;
-      current_table_size = 1;
-      fill_factor = static_cast<float>(current_table_size)/static_cast<float>(table_size);
+    Node** nodes = new Node*;
 
-      for (int i = 0; i < table_size; ++i) {
-          nodes[i] = nullptr;
-      }
+    HashTable(const HashTable &b);
+    // Обменивает значения двух хэш-таблиц.
+    // Подумайте, зачем нужен этот метод, при наличии стандартной функции
+    // std::swap.
+    void swap(HashTable &b);
 
-  };
+    HashTable &operator=(const HashTable &b){};
 
-  ~HashTable(){};
+    // Очищает контейнер.
+    void clear();
+    // Удаляет элемент по заданному ключу.
+    bool erase(const Key &k);
 
-  typedef struct node {
-      string Key;
-      Value value;
-      node* next;
-  }node;
+    // Вставка в контейнер. Возвращаемое значение - успешность вставки.
+    bool insert(const Key &k, const Value &value) {
+        /*todo resize of table*/
+        int index = get_hash(k);
+        if (nodes[index] != nullptr)  {
+            while (nodes[index]->next != nullptr){
+                nodes[index]->next = nodes[index]->next->next;
+            }
+            nodes[index]->next = new Node(k, value, nullptr);
+        } else {
+           nodes[index]= new Node(k, value, nullptr);
+            cout<<nodes[index]->Key<<endl;
+            cout<<index<<endl;
+        }
+        current_table_size++;
+    };
 
-  node** nodes = new node*;
+    // Проверка наличия значения по заданному ключу.
+    bool contains(const Key &k) {
+        int index;
+        index = get_hash(k);
 
-  HashTable(const HashTable& b);
-  // Обменивает значения двух хэш-таблиц.
-  // Подумайте, зачем нужен этот метод, при наличии стандартной функции
-  // std::swap.
-  void swap(HashTable& b);
-
-  HashTable& operator=(const HashTable& b) {};
-
-  // Очищает контейнер.
-  void clear();
-  // Удаляет элемент по заданному ключу.
-  bool erase(const Key& k);
-
-  // Вставка в контейнер. Возвращаемое значение - успешность вставки.
-  bool insert(const Key& k, const Value& value) {
-      /*todo resize of table*/
-      int index = get_hash(k, current_table_size);
-      if(nodes[index] != nullptr) {
-          nodes[index]->next = new node;
-          nodes[index]->next->Key = k;
-          nodes[index]->next->value = value;
-          nodes[index]->next->next = nullptr;
-      } else {
-          nodes[index] = new node;
-          nodes[index]->Key = k;
-          nodes[index]->value = value;
-          nodes[index]->next = nullptr;
-      }
-      current_table_size++;
-  };
-
-  // Проверка наличия значения по заданному ключу.
-   bool contains(const Key& k) {
-      int index;
-      index = get_hash(k, current_table_size);
-      if (nodes[index] != nullptr) {
-          if (nodes[index]->Key == k) return true;
+        if (nodes[index] != nullptr) {
+            if (nodes[index]->Key == k) return true;
             else {
-                while (nodes[index] != nullptr) {
+                while (nodes[index]->next != nullptr) {
                     nodes[index] = nodes[index]->next;
                     if (nodes[index]->Key == k) return true;
                 }
             }
-      } else return false;
-  };
+        }
+        return false;
+    };
 
-  // Возвращает значение по ключу. Небезопасный метод.
-  // В случае отсутствия ключа в контейнере, следует вставить в контейнер
-  // значение, созданное конструктором по умолчанию и вернуть ссылку на него.
-  Value& operator[](const Key& k);
+    // Возвращает значение по ключу. Небезопасный метод.
+    // В случае отсутствия ключа в контейнере, следует вставить в контейнер
+    // значение, созданное конструктором по умолчанию и вернуть ссылку на него.
+    Value &operator[](const Key &k);
 
-  // Возвращает значение по ключу. Бросает исключение при неудаче.
-  Value& at(const Key& k);
-  const Value& at(const Key& k) const;
+    // Возвращает значение по ключу. Бросает исключение при неудаче.
+    Value &at(const Key &k) {
+            int index = get_hash(k);
+            assert(nodes[index]);
+            if (nodes[index]->Key == k) {
+                return nodes[index]->value;
+            }
+            else {
+                while (nodes[index]->next != nullptr) {
+                    nodes[index] = nodes[index]->next;
+                    if (nodes[index]->Key == k)
+                        return nodes[index]->value;
+                }
+            }
+    };
+    const Value &at(const Key &k) const;
 
-  size_t size() const {
-      return table_size;
-  };
-  bool empty() const{
-      if (table_size == 0) return true;
-        else return false;
-  };
+    size_t size() const {
+        return table_size;
+    };
+    bool empty() const {
+        if (table_size == 0) return true;
+        else
+            return false;
+    };
 
-  friend bool operator==(const HashTable& a, const HashTable& b);
-  friend bool operator!=(const HashTable& a, const HashTable& b);
+    friend bool operator==(const HashTable &a, const HashTable &b);
+    friend bool operator!=(const HashTable &a, const HashTable &b);
 
-  int get_hash(const string& key, int& current_table_size) {
-       int hash_result = 0;
-       for (int i = 0; key[i] != 0; ++i) {
+    int get_hash(const string &key) {
+        int hash_result = 0;
+        for (int i = 0; key[i] != 0; ++i) {
             hash_result += key[i] % table_size;
-       }
-       hash_result = (hash_result*2 + 1) % table_size;
-       return hash_result;
-  }
+        }
+        hash_result = (hash_result * 2 + 1) % table_size;
+        return hash_result;
+    }
 
 private:
     int table_size;
     int current_table_size;
     float fill_factor;
- };
+};
 
-
-
-bool test() {
-    HashTable a;
-    string key = "lorem";
-    Value value;
-    value.age = 19;
-    value.weight = 170;
-    a.insert(key, value);
-    assert(a.contains("lorem"));
-}
 
 
 int main() {
-    test();
+    HashTable a;
+    string key = "qwerty";
+    Value value(19, 170);
+    a.insert(key, value);
+    cout<<a.nodes[1]->Key<<endl;
+
     return 0;
 }
