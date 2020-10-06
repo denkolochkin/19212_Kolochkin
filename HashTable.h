@@ -1,5 +1,3 @@
-#ifndef FINAL_LAB1_HASHTABLE_H
-#define FINAL_LAB1_HASHTABLE_H
 #include <iostream>
 #include <math.h>
 #include <string>
@@ -43,7 +41,7 @@ public:
 
     bool erase(const Key &k) ;
 
-    void resize_table(HashTable* old_table, const Key &k, const Value &value);
+    HashTable& resize_table(const Key &k, const Value &value);
 
     bool insert(const Key &k, const Value &value);
 
@@ -72,5 +70,3 @@ private:
     int chains_count;
     float fill_factor;
 };
-
-#endif //FINAL_LAB1_HASHTABLE_H
