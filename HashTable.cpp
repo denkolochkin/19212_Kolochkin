@@ -14,13 +14,7 @@ HashTable::HashTable() {
 };
 
 HashTable::~HashTable(){
-    for (int i = 0; i <= chains_count; ++i) {
-        while(nodes[i] != nullptr) {
-            Node *tmp = nodes[i]->next;
-            delete nodes[i];
-            nodes[i]=tmp;
-        }
-    }
+    clear();
     delete[] nodes;
 };
 
@@ -36,26 +30,10 @@ HashTable::HashTable(const HashTable &b){
 }
 
 void HashTable::swap(HashTable &b){
-    HashTable tmp;
-
-    tmp.table_size = b.table_size;
-    tmp.current_table_size = b.current_table_size;
-    tmp.chains_count = b.chains_count;
-    tmp.fill_factor = b.fill_factor;
-    tmp.nodes = b.nodes;
-
-    b.table_size = table_size;
-    b.current_table_size = current_table_size;
-    b.chains_count = chains_count;
-    b.fill_factor = fill_factor;
-    b.nodes = nodes;
-
-    table_size = tmp.table_size;
-    current_table_size = tmp.current_table_size;
-    chains_count = tmp.chains_count;
-    fill_factor = tmp.fill_factor;
-    nodes = tmp.nodes;
-
+    std::swap(nodes, b.nodes);
+    std::swap(table_size, b.table_size);
+    std::swap(current_table_size, b.current_table_size);
+    std::swap(chains_count, b.chains_count);
 };
 
 HashTable& HashTable::operator=(HashTable &b){
@@ -71,13 +49,24 @@ HashTable& HashTable::operator=(HashTable &b){
 };
 
 void HashTable::clear() {
+    Node* prev;
     for (int i = 0; i <= chains_count; ++i) {
-        while(nodes[i] != nullptr) {
-            Node *tmp = nodes[i]->next;
-            delete nodes[i];
-            nodes[i]=tmp;
+        if (nodes[i] != nullptr) {
+            if(nodes[i]->next != nullptr) {
+                prev = nodes[i];
+                while (nodes[i]->next != nullptr) {
+                    nodes[i] = nodes[i]->next;
+                    delete prev;
+                    prev = nodes[i];
+                }
+                delete nodes[i];
+                nodes[i] = nullptr;
+            }
+            else {
+                delete nodes[i];
+                nodes[i] = nullptr;
+            }
         }
-        nodes[i] = nullptr;
     }
     current_table_size = 0;
 };
@@ -104,39 +93,36 @@ bool HashTable::erase(const Key &k) {
     }
 }
 
-void HashTable::resize_table(HashTable* old_table ,const Key &k, const Value &value){
-    HashTable new_table;
-    new_table.table_size = old_table->table_size * 2;
-    for (int j = 0; j < new_table.table_size; ++j) {
-        new_table.nodes[j] = (Node*) new Node*;
-        new_table.nodes[j] = nullptr;
+HashTable& HashTable::resize_table(const Key &k, const Value &value) {
+    HashTable* new_table = new HashTable;
+    new_table->table_size = table_size * 2;
+    for (int j = 0; j < new_table->table_size; ++j) {
+        new_table->nodes[j] = (Node*) new Node*;
+        new_table->nodes[j] = nullptr;
     }
-    std::fill(new_table.nodes,new_table.nodes + new_table.table_size, nullptr);
-    new_table.insert(k, value);
-
-    for (int i = 0; i < old_table->table_size; ++i) {
-        if (old_table->nodes[i] != nullptr && old_table->nodes[i]->next != nullptr) {
-            Node* tmp = old_table->nodes[i];
+    new_table->insert(k, value);
+    for (int i = 0; i < table_size; ++i) {
+        if (nodes[i] != nullptr && nodes[i]->next != nullptr) {
+            Node* tmp = nodes[i];
             while (tmp != nullptr){
-                new_table.insert(tmp->key, tmp->value);
+                new_table->insert(tmp->key, tmp->value);
                 tmp = tmp->next;
             }
         }
-        else if (old_table->nodes[i] != nullptr){
-            new_table.insert(old_table->nodes[i]->key, old_table->nodes[i]->value);
+        else if (nodes[i] != nullptr){
+            new_table->insert(nodes[i]->key, nodes[i]->value);
         }
     }
-    old_table->clear();
-    *old_table = new_table;
+    return *new_table;
 }
 
 bool HashTable::insert(const Key &k, const Value &value) {
     if (fill_factor >= 0.75) {
-        resize_table(this, k ,value);
+        *this = resize_table(k ,value);
         return true;
     }
     int index = get_hash(k);
-    if (nodes[index] != NULL)  {
+    if (nodes[index] != nullptr)  {
         Node* tmp = nodes[index]->next;
         Node* prev = nodes[index];
         while (tmp != nullptr){
@@ -157,7 +143,7 @@ bool HashTable::insert(const Key &k, const Value &value) {
     }
 };
 
-bool HashTable::contains (const Key &k) const{
+bool HashTable::contains(const Key &k) const{
     int index;
     index = get_hash(k);
     if (!nodes[index]) return false;
@@ -260,7 +246,7 @@ bool operator!=(const HashTable &a, const HashTable &b){
 
 int HashTable::get_hash(const Key &key) const {
     int prime = 521;
-    long int hash_result = 0;
+    unsigned long int hash_result = 0;
     for (int i = 0; key[i] != 0; ++i) {
         hash_result += key[i]*pow(prime, i);
     }
@@ -273,4 +259,3 @@ bool operator==(const Value &a, const Value &b){
         return true;
     return false;
 };
-
