@@ -1,13 +1,20 @@
-
 #include "gtest/gtest.h"
 #include "../HashTable.cpp"
 
 namespace {
-
     class HashTableTest : public ::testing::Test {
     protected:
         HashTable a;
     };
+
+    TEST_F(HashTableTest, insert_resize) {
+        HashTable w;
+        Key key1 = "Alt";
+        Key key2 = "Colt";
+        Value value(19, 170);
+        w.insert(key1, value);
+        w.resize_table(key2, value);
+    }
 
     TEST_F(HashTableTest, size) {
         EXPECT_NE(0, a.size());
@@ -17,25 +24,30 @@ namespace {
         EXPECT_FALSE(a.empty());
     }
 
-    TEST_F(HashTableTest, clear) {
-        a.clear();
-    }
-
-    TEST_F(HashTableTest, insert) {
+    TEST_F(HashTableTest, contains) {
+        HashTable c;
         Value value(19, 170);
-        Key key = "qwe";
-        Key key1 = "ewq";
-        a.insert(key, value);
-        a.contains(key);
-        ASSERT_TRUE(a.insert(key1, value));
+        Key key1 = "qwe";
+        Key key2 = "ewq";
+        c.insert(key1, value);
+        c.insert(key2, value);
+        EXPECT_TRUE(c.contains(key2));
     }
 
     TEST_F(HashTableTest, brackets) {
-        Key key = "qwe";
+        HashTable y;
         Value value(19, 170);
-        a.insert(key, value);
-        Value b = a[key];
-        EXPECT_EQ(b, value);
+        Value b = y["lorem"];
+        EXPECT_FALSE(b == value);
+    }
+
+    TEST_F(HashTableTest, new_brackets) {
+        HashTable h;
+        Value value(19, 170);
+        Key key = "lorem";
+        h.insert(key, value);
+        Value b = h["lorem"];
+        EXPECT_TRUE(b == value);
     }
 
     TEST_F(HashTableTest, not_equal) {
@@ -49,11 +61,22 @@ namespace {
         EXPECT_TRUE(a == b);
     }
 
+    TEST_F(HashTableTest, new_equal) {
+        HashTable g;
+        HashTable j;
+        g.insert("qwe", Value(1, 1));
+        g.insert("ewq", Value(1, 1));
+        j.insert("ewq", Value(1, 1));
+        j.insert("ewq", Value(1, 1));
+        EXPECT_TRUE(j == g);
+    }
+
     TEST_F(HashTableTest, erase) {
+        HashTable m;
         Value value(19, 170);
-        Key key = "qwe";
-        a.insert(key, value);
-        EXPECT_TRUE(a.erase(key));
+        Key key = "qwerty";
+        m.insert(key, value);
+        EXPECT_TRUE(m.erase(key));
     }
 
     TEST_F(HashTableTest, new_erase) {
@@ -66,25 +89,48 @@ namespace {
     }
 
     TEST_F(HashTableTest, at) {
+        HashTable k;
+        Value value(19, 170);
+        Key key = "test";
+        k.insert(key, value);
+        EXPECT_EQ(k.at(key), value);
+    }
+
+    TEST_F(HashTableTest, at_false) {
         Value value(19, 170);
         Key key = "test";
         a.insert(key, value);
-        EXPECT_EQ(a.at(key), value);
+        EXPECT_FALSE(a.at("qwedsa") == value);
     }
 
-    TEST_F(HashTableTest, const_at) {
-        HashTable c;
-        const Value value(19, 170);
-        const Key key = "test";
-        c.insert(key, value);
-        EXPECT_EQ(c.at(key), value);
+    TEST_F(HashTableTest, new_at) {
+        HashTable k;
+        Value value(19, 170);
+        Key key = "qwe";
+        Key key1 = "ewq";
+        k.insert(key, value);
+        k.insert(key1, value);
+        EXPECT_EQ(k.at(key1), value);
     }
 
     TEST_F(HashTableTest, equal_operator) {
         HashTable a;
         HashTable b;
-        b = a;
-        EXPECT_EQ(a, b);
+        a.insert("lorem", Value(1, 1));
+        b.insert("lorem", Value(1, 1));
+
+        EXPECT_TRUE(a == b);
     }
 
+    TEST_F(HashTableTest, swap) {
+        HashTable a;
+        HashTable b;
+        a.swap(b);
+    }
+
+    TEST_F(HashTableTest, clear) {
+        HashTable p;
+        p.insert("lor", Value(1, 1));
+        p.insert("ips", Value(1, 1));
+    }
 }
