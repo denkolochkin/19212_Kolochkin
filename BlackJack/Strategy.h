@@ -3,9 +3,8 @@
 
 class Strategy {
 public:
-    virtual void printName() = 0;
-    virtual int TakeCard() = 0;
-    virtual int Play(int) = 0;
+    virtual int takeCard() = 0;
+    virtual int play(int, int) = 0;
     virtual ~Strategy(){};
 };
 
