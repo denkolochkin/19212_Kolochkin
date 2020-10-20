@@ -1,6 +1,5 @@
 #include "Strategy.h"
 
-
 class NotSoStupidStrategy : public Strategy {
 public:
     void printName() override;
