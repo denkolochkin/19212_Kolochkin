@@ -10,25 +10,23 @@ static bool g(){
 
 static bool b=g();
 
-void StupidStrategy::printName() {
-    std::cout<<"Stupid"<<std::endl;
-}
+
 
 Strategy *createStupidStrategy () {
     return new StupidStrategy;
 }
 
-int StupidStrategy::TakeCard() {
+int StupidStrategy::takeCard() {
     return rand() % 10 + 1;
 }
 
-int StupidStrategy::Play(int FirstCard) {
+int StupidStrategy::play(int FirstCard, int FirstCardOfOpponent) {
     std::vector<int> History;
     History.push_back(FirstCard);
     int Sum = FirstCard;
     int CurrentCard;
     while (Sum < 21) {
-        CurrentCard = TakeCard();
+        CurrentCard = takeCard();
         History.push_back(CurrentCard);
         Sum += CurrentCard;
     }
