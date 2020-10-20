@@ -7,6 +7,7 @@ struct DefaultErrorPolice {
         throw std::string ("BUSTED!");
     }
 };
+
 template<class Product, class Id, class Creator, class ErrorPolice = DefaultErrorPolice<Product, Id>>
 class Factory {
 public:
