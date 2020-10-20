@@ -1,8 +1,32 @@
 #include <iostream>
 #include "Factory.h"
 #include "Strategy.h"
+#define NotCard 0
+#define Pass -1
 
 void ChooseWinner (int first, int second) {
+    if (first == Pass) {
+        if (second <= 21) {
+            std::cout << "Not so stupid strategy win with result: " << second << std::endl;
+            return;
+        }
+        else {
+            std::cout << "No winner"<< std::endl;
+            std::cout<<"Not so stupid strategy lose - pass"<<std::endl;
+            return;
+        }
+    }
+    if (second == Pass) {
+        if (first <= 21) {
+            std::cout << "Stupid strategy win with result: " << first << std::endl;
+            std::cout<<"Not so stupid strategy lose - pass"<<std::endl;
+            return;
+        }
+        else {
+            std::cout << "No winner"<< std::endl;
+            return;
+        }
+    }
     if (first == 21) {
         std::cout << "Stupid strategy - BlackJack" << std::endl;
         return;
@@ -31,6 +55,13 @@ void ChooseWinner (int first, int second) {
     }
 }
 
+void TournamentOfTwo (std::unique_ptr<Strategy>& first, std::unique_ptr<Strategy>& second) {
+    int FirstCard = first->takeCard();
+    int ResultOfStupidStrategy = first->play(FirstCard, NotCard);
+    int ResultOfNotSoStupidStrategy = second->play(second->takeCard(), FirstCard);
+    ChooseWinner(ResultOfStupidStrategy, ResultOfNotSoStupidStrategy);
+}
+
 
 int main (int argc, char *argv[]) {
     std::string Stupid = "Stupid";
@@ -40,11 +71,8 @@ int main (int argc, char *argv[]) {
     std::unique_ptr<Strategy> NotSoStupidStrategy (Factory<Strategy,std::string,Strategy*(*)()>::getInstance()->makeStrategy(NotSoStupid));
 
     srand(time(0));
-    int FirstCard = StupidStrategy->TakeCard();
-    int ResultOfStupidStrategy = StupidStrategy->Play(FirstCard);
-    int ResultOfNotSoStupidStrategy = NotSoStupidStrategy->Play(StupidStrategy->TakeCard());
 
-   ChooseWinner(ResultOfStupidStrategy, ResultOfNotSoStupidStrategy);
+    TournamentOfTwo(StupidStrategy, NotSoStupidStrategy);
 
-   return 0;
+    return 0;
 }
