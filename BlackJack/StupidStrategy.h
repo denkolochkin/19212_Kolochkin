@@ -2,10 +2,9 @@
 
 class StupidStrategy : public Strategy {
 public:
-    void printName() override;
     ~StupidStrategy(){}
-    int TakeCard() override;
-    int Play(int) override;
+    int takeCard() override;
+    int play(int, int) override;
 private:
 
 };
