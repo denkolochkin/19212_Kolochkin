@@ -27,6 +27,7 @@ public:
         static Factory f;
         return &f;
     };
+    
 private:
     Factory () = default;
     ~Factory () = default;
