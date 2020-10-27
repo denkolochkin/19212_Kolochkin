@@ -3,8 +3,8 @@
 
 class Strategy {
 public:
-    virtual int takeCard() = 0;
-    virtual int play(int, int) = 0;
+    virtual int details(std::vector<int>, int) = 0;
+    virtual int takeCard(int, int) = 0;
+    virtual int play(int, int, int, int) = 0;
     virtual ~Strategy(){};
 };
-
