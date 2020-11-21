@@ -2,6 +2,7 @@
 #include "Factory.h"
 #include <iostream>
 #include <vector>
+#define Pass -2
 #define EASY 1
 #define DECK 2
 #define HARD 3
@@ -76,21 +77,12 @@ int HardStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int GameMode
     CurrentCard = takeCard(Mode, NumberOfDecks);
     History.push_back(CurrentCard);
     Sum += CurrentCard;
+    if (DealerCard <= 4) {
+        return Pass;
+    }
     if (GameMode == DETAILED) {
         if(details(History, CurrentCard) == QUIT) {
             return QUIT;
-        }
-    }
-    if (Sum < 12) {
-        while (Sum < 15) {
-            CurrentCard = takeCard(Mode, NumberOfDecks);
-            History.push_back(CurrentCard);
-            Sum += CurrentCard;
-            if (GameMode == DETAILED) {
-                if(details(History, CurrentCard) == QUIT) {
-                    return QUIT;
-                }
-            }
         }
     }
     if (Sum < 15) {
