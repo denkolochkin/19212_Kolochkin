@@ -2,12 +2,12 @@
 #include "Factory.h"
 #include <iostream>
 #include <vector>
+#define Pass -2
 #define EASY 1
 #define DECK 2
 #define HARD 3
 #define QUIT -1
 #define DETAILED 0
-
 
 static bool g(){
     Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("Stupid", createStupidStrategy);
@@ -80,6 +80,9 @@ int StupidStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int GameMo
         if(details(History, CurrentCard) == QUIT) {
             return QUIT;
         }
+    }
+    if (DealerCard == 5 || Sum == 14) {
+        return Pass;
     }
     while (Sum < 21) {
         CurrentCard = takeCard(Mode, NumberOfDecks);
