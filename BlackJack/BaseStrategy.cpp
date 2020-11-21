@@ -2,13 +2,14 @@
 #include "Factory.h"
 #include <iostream>
 #include <vector>
+#define Pass -2
 #define EASY 1
 #define DECK 2
 #define HARD 3
 #define QUIT -1
 #define DETAILED 0
 
-static bool g(){
+static bool g() {
     Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("Base", createBaseStrategy);
     return true;
 }
@@ -75,6 +76,9 @@ int BaseStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int GameMode
     CurrentCard = takeCard(Mode, NumberOfDecks);
     History.push_back(CurrentCard);
     Sum += CurrentCard;
+    if (DealerCard <= 7) {
+        return Pass;
+    }
     if (GameMode == DETAILED) {
         if(details(History, CurrentCard) == QUIT) {
             return QUIT;
