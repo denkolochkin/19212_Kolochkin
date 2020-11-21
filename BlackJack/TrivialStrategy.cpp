@@ -2,7 +2,7 @@
 #include "Factory.h"
 #include <iostream>
 #include <vector>
-#define Pass -1
+#define Pass -2
 #define EASY 1
 #define DECK 2
 #define HARD 3
@@ -81,7 +81,9 @@ int TrivialStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int GameM
             return QUIT;
         }
     }
-
+    if (DealerCard == 10 || Sum == 12) {
+        return Pass;
+    }
     if (Sum < 15) {
         while (Sum <= 18) {
             CurrentCard = takeCard(Mode, NumberOfDecks);
