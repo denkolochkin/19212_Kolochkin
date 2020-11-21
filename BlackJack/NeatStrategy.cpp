@@ -2,6 +2,7 @@
 #include "Factory.h"
 #include <iostream>
 #include <vector>
+#define Pass -2
 #define EASY 1
 #define DECK 2
 #define HARD 3
@@ -75,19 +76,12 @@ int NeatStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int GameMode
     CurrentCard = takeCard(Mode, NumberOfDecks);
     History.push_back(CurrentCard);
     Sum += CurrentCard;
+    if (DealerCard <= 5) {
+        return Pass;
+    }
     if (GameMode == DETAILED) {
         if(details(History, CurrentCard) == QUIT) {
             return QUIT;
-        }
-    }
-    if (Sum > 2 && Sum < 10) {
-        CurrentCard = takeCard(Mode, NumberOfDecks);
-        History.push_back(CurrentCard);
-        Sum += CurrentCard;
-        if (GameMode == DETAILED) {
-            if(details(History, CurrentCard) == QUIT) {
-                return QUIT;
-            }
         }
     }
     if (Sum > 10 && Sum < 15) {
