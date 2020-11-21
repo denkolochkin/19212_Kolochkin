@@ -2,7 +2,7 @@
 #include "Factory.h"
 #include <iostream>
 #include <vector>
-#define Pass -1
+#define Pass -2
 #define EASY 1
 #define DECK 2
 #define HARD 3
@@ -19,7 +19,6 @@ static bool b=g();
 Strategy *createNotSoStupidStrategy () {
     return new NotSoStupidStrategy;
 }
-
 int NotSoStupidStrategy::details(std::vector<int> History, int CurrentCard) {
     std::cout<<"Details of not so stupid strategy:"<<std::endl;
     std::cout<<"New card - "<<CurrentCard<<std::endl;
@@ -81,7 +80,7 @@ int NotSoStupidStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int G
             return QUIT;
         }
     }
-    if (DealerCard == 10) {
+    if (DealerCard == 10 || Sum == 10) {
         return Pass;
     }
     while (Sum <= 18) {
