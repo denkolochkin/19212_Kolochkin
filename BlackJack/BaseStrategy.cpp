@@ -9,7 +9,7 @@
 #define QUIT -1
 #define DETAILED 0
 
-static bool g() {
+static bool g(){
     Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("Base", createBaseStrategy);
     return true;
 }
@@ -77,6 +77,9 @@ int BaseStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int GameMode
     History.push_back(CurrentCard);
     Sum += CurrentCard;
     if (DealerCard <= 7) {
+        if (GameMode == DETAILED) {
+            printf("Base strategy - pass \n");
+        }
         return Pass;
     }
     if (GameMode == DETAILED) {
