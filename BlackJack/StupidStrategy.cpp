@@ -9,15 +9,12 @@
 #define QUIT -1
 #define DETAILED 0
 
-
 static bool g(){
     Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("Stupid", createStupidStrategy);
     return true;
 }
 
 static bool b=g();
-
-
 
 Strategy *createStupidStrategy () {
     return new StupidStrategy;
