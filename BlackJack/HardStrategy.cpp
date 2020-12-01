@@ -32,7 +32,6 @@ int HardStrategy::details(std::vector<int> History, int CurrentCard) {
     }
 }
 
-
 int HardStrategy::takeCard(int CardMode, int NumberOfDecks) {
     if (CardMode == EASY) {
         return rand() % 10 + 1;
