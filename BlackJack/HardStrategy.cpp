@@ -78,6 +78,9 @@ int HardStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int GameMode
     History.push_back(CurrentCard);
     Sum += CurrentCard;
     if (DealerCard <= 4) {
+        if (GameMode == DETAILED) {
+            printf("Hard strategy - pass \n");
+        }
         return Pass;
     }
     if (GameMode == DETAILED) {
