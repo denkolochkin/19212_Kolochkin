@@ -9,12 +9,15 @@
 #define QUIT -1
 #define DETAILED 0
 
+
 static bool g(){
     Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("Stupid", createStupidStrategy);
     return true;
 }
 
 static bool b=g();
+
+
 
 Strategy *createStupidStrategy () {
     return new StupidStrategy;
@@ -82,6 +85,9 @@ int StupidStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int GameMo
         }
     }
     if (DealerCard == 5 || Sum == 14) {
+        if (GameMode == DETAILED) {
+            printf("Stupid strategy - pass \n");
+        }
         return Pass;
     }
     while (Sum < 21) {
