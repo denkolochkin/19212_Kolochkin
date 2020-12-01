@@ -80,9 +80,6 @@ int NotSoStupidStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int G
             return QUIT;
         }
     }
-    if (DealerCard == 10 || Sum == 10) {
-        return Pass;
-    }
     while (Sum <= 18) {
         CurrentCard = takeCard(Mode, NumberOfDecks);
         History.push_back(CurrentCard);
