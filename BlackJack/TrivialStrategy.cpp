@@ -82,6 +82,9 @@ int TrivialStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int GameM
         }
     }
     if (DealerCard == 10 || Sum == 12) {
+        if (GameMode == DETAILED) {
+            printf("Trivial strategy - pass \n");
+        }
         return Pass;
     }
     if (Sum < 15) {
@@ -96,5 +99,6 @@ int TrivialStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int GameM
             }
         }
     }
+
     return Sum;
 }
