@@ -1,25 +1,34 @@
+#ifndef GAMEWIDGET_H
+#define GAMEWIDGET_H
+
 #include <QColor>
 #include <QWidget>
 
 class GameWidget : public QWidget {
     Q_OBJECT
 public:
-     GameWidget(QWidget *parent = 0);
+    explicit GameWidget(QWidget *parent = 0);
     ~GameWidget();
 
-public slots:
-    void clear();
-    void setCellsColor(const QColor &color);
-    void selectGridColor(const QColor &color);
-
-private:
-    QColor cellsColor;
-    QColor gridColor;
-    bool* canvas;
-    int canvasSize;
+protected:
     void paintEvent(QPaintEvent *);
     void pressMouseEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
-    void makeGrid(QPainter &painter);
-    void makeCanvas(QPainter &painter);
+
+public slots:
+    void clear(); // clear
+    void setMainColor(const QColor &color); // set color of the cells
+
+private slots:
+    void paintGrid(QPainter &painter);
+    void paintCanvas(QPainter &painter);
+
+private:
+    QColor mainColor;
+    //bool* canvas; // map
+
+    int canvasSize;
+    std::vector<std::vector<bool>> canvas;
 };
+
+#endif // GAMEWIDGET_H
