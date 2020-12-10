@@ -4,13 +4,20 @@
 
 typedef std::string Key;
 
+struct Value {
+    unsigned age;
+    unsigned weight;
+    Value() {age = 0; weight = 0;}
+    Value(unsigned age_, unsigned weight_): age(age_), weight(weight_){};
+    friend bool operator==(const Value &a, const Value &b) {
+        if (a.weight == b.weight && a.age == b.age)
+            return true;
+        return false;
+    };
+};
+
 class HashTable{
 public:
-    struct Value {
-        unsigned age;
-        unsigned weight;
-        Value(unsigned age_, unsigned weight_): age(age_), weight(weight_){};
-    };
 
     HashTable();
 
@@ -26,7 +33,7 @@ public:
 
     bool erase(const Key &k) ;
 
-    void resize_table(const Key &k, const Value &value);
+    void resize_table();
 
     bool insert(const Key &k, const Value &value);
 
@@ -48,8 +55,6 @@ public:
 
     int get_hash(const std::string &key) const;
 
-    friend bool operator==(const HashTable::Value &a, const HashTable::Value &b);
-
 private:
     struct Node{
         Key key;
@@ -60,6 +65,5 @@ private:
     Node** nodes = new Node*;
     int table_size;
     int current_table_size;
-    int chains_count;
     float fill_factor;
 };
