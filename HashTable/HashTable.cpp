@@ -64,7 +64,7 @@ HashTable& HashTable::operator=(const HashTable &b) {
     return *this;
 }
 
-void HashTable::clear(){
+void HashTable::clear() {
     for (size_t i = 0; i < table_size; ++i) {
         while (nodes[i] != nullptr) {       //delete every element
             Node* current = nodes[i]->next;
@@ -141,7 +141,7 @@ bool HashTable::insert(const Key &k, const Value &value) {
         fill_factor = static_cast<float>(current_table_size) / static_cast<float>(table_size);
         return true;
     }
-    else{
+    else {
         nodes[index] = new Node(k, value, nullptr);     //else just insert on a free place
         current_table_size++;
         fill_factor = static_cast<float>(current_table_size) / static_cast<float>(table_size);
