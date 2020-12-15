@@ -1,24 +1,19 @@
 #include "TrivialStrategy.h"
 #include "Factory.h"
+
 #include <iostream>
 #include <vector>
-#define Pass -2
-#define EASY 1
-#define DECK 2
-#define HARD 3
-#define QUIT -1
-#define DETAILED 0
+
+Strategy *createTrivialStrategy () {
+    return new TrivialStrategy;
+}
 
 static bool g(){
     Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("Trivial", createTrivialStrategy);
     return true;
 }
 
-static bool b=g();
-
-Strategy *createTrivialStrategy () {
-    return new TrivialStrategy;
-}
+static bool b = g();
 
 int TrivialStrategy::details(std::vector<int> History, int CurrentCard) {
     std::cout<<"Details of trivial strategy:"<<std::endl;
