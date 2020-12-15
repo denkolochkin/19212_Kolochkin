@@ -1,24 +1,19 @@
 #include "HardStrategy.h"
 #include "Factory.h"
+
 #include <iostream>
 #include <vector>
-#define Pass -2
-#define EASY 1
-#define DECK 2
-#define HARD 3
-#define DETAILED 0
-#define QUIT -1
 
-static bool g(){
+Strategy *createHardStrategy () {
+    return new HardStrategy;
+}
+
+static bool g() {
     Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("Hard", createHardStrategy);
     return true;
 }
 
 static bool b=g();
-
-Strategy *createHardStrategy () {
-    return new HardStrategy;
-}
 
 int HardStrategy::details(std::vector<int> History, int CurrentCard) {
     std::cout<<"Details of hard strategy:"<<std::endl;
@@ -31,6 +26,7 @@ int HardStrategy::details(std::vector<int> History, int CurrentCard) {
         return QUIT;
     }
 }
+
 
 int HardStrategy::takeCard(int CardMode, int NumberOfDecks) {
     if (CardMode == EASY) {
