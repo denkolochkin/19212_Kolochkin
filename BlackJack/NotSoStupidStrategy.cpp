@@ -1,24 +1,20 @@
 #include "NotSoStupidStrategy.h"
 #include "Factory.h"
+
 #include <iostream>
 #include <vector>
-#define Pass -2
-#define EASY 1
-#define DECK 2
-#define HARD 3
-#define QUIT -1
-#define DETAILED 0
-
-static bool g(){
-    Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("NotSoStupid", createNotSoStupidStrategy);
-    return true;
-}
-
-static bool b=g();
 
 Strategy *createNotSoStupidStrategy () {
     return new NotSoStupidStrategy;
 }
+
+static bool g() {
+    Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("NotSoStupid", createNotSoStupidStrategy);
+    return true;
+}
+
+static bool b = g();
+
 int NotSoStupidStrategy::details(std::vector<int> History, int CurrentCard) {
     std::cout<<"Details of not so stupid strategy:"<<std::endl;
     std::cout<<"New card - "<<CurrentCard<<std::endl;
