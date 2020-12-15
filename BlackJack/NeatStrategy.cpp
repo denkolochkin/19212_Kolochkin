@@ -13,7 +13,7 @@ static bool g() {
     return true;
 }
 
-static bool b=g();
+static bool b = g();
 
 int NeatStrategy::details(std::vector<int> History, int CurrentCard) {
     std::cout<<"Details of neat strategy:"<<std::endl;
