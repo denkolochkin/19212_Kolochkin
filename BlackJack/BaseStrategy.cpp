@@ -1,24 +1,19 @@
 #include "BaseStrategy.h"
 #include "Factory.h"
+
 #include <iostream>
 #include <vector>
-#define Pass -2
-#define EASY 1
-#define DECK 2
-#define HARD 3
-#define QUIT -1
-#define DETAILED 0
 
-static bool g(){
+Strategy *createBaseStrategy () {
+    return new BaseStrategy;
+}
+
+static bool g() {
     Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("Base", createBaseStrategy);
     return true;
 }
 
 static bool b=g();
-
-Strategy *createBaseStrategy () {
-    return new BaseStrategy;
-}
 
 int BaseStrategy::details(std::vector<int> History, int CurrentCard) {
     std::cout<<"Details of base strategy:"<<std::endl;
