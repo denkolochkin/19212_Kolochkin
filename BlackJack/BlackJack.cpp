@@ -1,16 +1,9 @@
-#include <iostream>
 #include "BlackJack.h"
-#include <vector>
-#define Pass -2
-#define EASY 1
-#define DECK 2
-#define HARD 3
-#define DETAILED 0
-#define TOURNAMENT 1
-#define FAST 4
-#define QUIT -1
 
-int ChooseWinner (int first, std::string firstName, int second, std::string secondName) {
+#include <iostream>
+#include <vector>
+
+int BlackJack::ChooseWinner(int first, std::string firstName, int second, std::string secondName) {
     std::cout<<"***Results of tournament***"<<std::endl;
     if (first == Pass) {
         if (second <= 21) {
@@ -88,7 +81,13 @@ int ChooseWinner (int first, std::string firstName, int second, std::string seco
     }
 }
 
-std::unique_ptr<Strategy>& TournamentOfTwo (std::unique_ptr<Strategy>& first, std::string firstName, std::unique_ptr<Strategy>& second,std::string secondName, int Mode, int NumberOfDecks, int GameMode) {
+std::unique_ptr<Strategy>& BlackJack::TournamentOfTwo(
+                                                       std::unique_ptr<Strategy>& first,
+                                                       std::string firstName,
+                                                       std::unique_ptr<Strategy>& second,
+                                                       std::string secondName,
+                                                       int Mode, int NumberOfDecks, int GameMode
+                                                       ) {
     int DealerCard = first->takeCard(Mode, NumberOfDecks);
     int ResultOfFirst = first->play(DealerCard, Mode, NumberOfDecks, GameMode);
     if (ResultOfFirst == QUIT) {
@@ -109,22 +108,36 @@ std::unique_ptr<Strategy>& TournamentOfTwo (std::unique_ptr<Strategy>& first, st
     }
 }
 
-void fast (std::string first, std::string second, int CardMode, int NumberOfDecks, int GameMode) {
-    std::unique_ptr<Strategy> FirstStrategy(Factory<Strategy, std::string, Strategy *(*)()>::getInstance()->makeStrategy(first));
-    std::unique_ptr<Strategy> SecondStrategy(Factory<Strategy, std::string, Strategy *(*)()>::getInstance()->makeStrategy(second));
-    std::unique_ptr<Strategy> &Winner = TournamentOfTwo(FirstStrategy, first, SecondStrategy, second, CardMode, NumberOfDecks, GameMode);
+void BlackJack::fast (std::string first, std::string second, int CardMode, int NumberOfDecks, int GameMode) {
+    std::unique_ptr<Strategy> FirstStrategy(
+                                            Factory<Strategy, std::string, Strategy *(*)()>::
+                                            getInstance()->makeStrategy(first)
+                                            );
+    std::unique_ptr<Strategy> SecondStrategy(
+                                             Factory<Strategy, std::string, Strategy *(*)()>::
+                                             getInstance()->makeStrategy(second)
+                                             );
+    std::unique_ptr<Strategy> &Winner = TournamentOfTwo(
+                                                    FirstStrategy, first,
+                                                    SecondStrategy, second,
+                                                        CardMode, NumberOfDecks, GameMode
+                                                       );
 }
 
-void Tournament(std::vector<std::string> Players , int CardMode, int NumberOfDecks, int GameMode) {
+void BlackJack::Tournament(std::vector<std::string> Players , int CardMode, int NumberOfDecks, int GameMode) {
     std::string first;
     std::string second;
     for (int i = 0; i < Players.size() - 1; ++i) {
         for (int j = i + 1; j < Players.size(); ++j) {
             first = Players[i];
             second = Players[j];
-            std::unique_ptr<Strategy> FirstStrategy (Factory<Strategy, std::string, Strategy *(*)()>::getInstance()->makeStrategy(first));
-            std::unique_ptr<Strategy> SecondStrategy (Factory<Strategy, std::string, Strategy *(*)()>::getInstance()->makeStrategy(second));
-            std::unique_ptr<Strategy> &Winner = TournamentOfTwo(FirstStrategy, first, SecondStrategy, second, CardMode, NumberOfDecks, GameMode);
+            std::unique_ptr<Strategy> FirstStrategy (Factory<Strategy, std::string, Strategy *(*)()>::
+                                                     getInstance()->makeStrategy(first));
+            std::unique_ptr<Strategy> SecondStrategy (Factory<Strategy, std::string, Strategy *(*)()>::
+                                                      getInstance()->makeStrategy(second));
+            std::unique_ptr<Strategy> &Winner = TournamentOfTwo(FirstStrategy, first,
+                                                                SecondStrategy, second,
+                                                                    CardMode, NumberOfDecks, GameMode);
         }
     }
 }
