@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Strategy.h"
 
 class NeatStrategy : public Strategy {
