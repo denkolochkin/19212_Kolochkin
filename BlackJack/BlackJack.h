@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Factory.h"
 #include "Strategy.h"
 
