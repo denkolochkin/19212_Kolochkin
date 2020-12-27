@@ -1,7 +1,5 @@
 #include "game.h"
 
-#include <sstream>
-
 GameWidget::GameWidget() : canvasSizeX(10), canvasSizeY(10) {
     canvas.resize(canvasSizeY);
     for(size_t i = 0; i < canvasSizeY; ++i) {
