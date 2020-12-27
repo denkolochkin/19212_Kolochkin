@@ -5,6 +5,7 @@
 #include <string>
 
 class GameWidget {
+    
 public:
     GameWidget();
     size_t getCanvasSizeX();
