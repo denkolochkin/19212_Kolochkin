@@ -22,6 +22,7 @@ public:
     void writeSizes(std::string &s);
     void writeCanvas(std::string &canvas);
     bool processFile(const std::string s);
+    
 private:
     bool isAlive(size_t k, size_t j);
     void resetCanvas();
