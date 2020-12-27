@@ -35,4 +35,5 @@ private:
     size_t canvasSizeY;
     std::vector<int> B;
     std::vector<int> S;
+    
 };
