@@ -123,5 +123,21 @@ namespace{
         a.insert("sum",value);
         a.insert("lorem",value);
         EXPECT_TRUE(a.contains("lor") == a.contains("em") == a.contains("sum"));
+        EXPECT_TRUE(a.contains("ip") == a.contains("lorem"));
+    }
+    
+    TEST_F(HashTableTest, new_resize){
+        HashTable a;
+        Value value(1,1);
+        a.insert("lor",value);
+        a.insert("em",value);
+        a.insert("ip",value);
+        a.insert("sum",value);
+        a.insert("lorem",value);
+        a.insert("mor", value);
+        a.insert("mus", value);
+        EXPECT_TRUE(a.contains("lor") == a.contains("em") == a.contains("sum"));
+        EXPECT_TRUE(a.contains("ip") == a.contains("lorem") == a.contains("mor"));
+        EXPECT_TRUE(a.contains("mus"));
     }
 }
