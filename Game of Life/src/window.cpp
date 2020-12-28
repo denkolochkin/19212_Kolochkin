@@ -104,5 +104,4 @@ void MainWindow::on_btnOpen_clicked() {
     QTextStream in(&file);
     QString str = in.readAll();
     painter->getFile(str.toStdString());
-
 }
