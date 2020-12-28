@@ -298,3 +298,7 @@ bool GameWidget::processFile(const std::string s) {
     canvas = next;
     return true;
  }
+
+
+
+
