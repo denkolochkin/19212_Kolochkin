@@ -44,7 +44,7 @@ void PainterWidget::pressMouseEvent(QMouseEvent* event) {
 void PainterWidget::mouseMoveEvent(QMouseEvent* event) {
     size_t k = floor(event->y()/((double)height()/game->getCanvasSizeY()));
     size_t j = floor(event->x()/((double)width()/game->getCanvasSizeX()));
-    if (k < game->getCanvasSizeX() && j < game->getCanvasSizeY() && k >= 0 && j >= 0) {
+    if (k < game->getCanvasSizeY() && j < game->getCanvasSizeX() && k >= 0 && j >= 0) {
         game->moveEvent(k, j);
         update();
     }
