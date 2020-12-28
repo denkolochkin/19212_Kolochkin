@@ -1,8 +1,4 @@
 #include "StupidStrategy.h"
-#include "Factory.h"
-
-#include <iostream>
-#include <vector>
 
 Strategy *createStupidStrategy () {
     return new StupidStrategy;
