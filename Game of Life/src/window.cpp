@@ -33,21 +33,38 @@ void MainWindow::selectRules() {
         painter->setS(rules->S);
     }
     if (rules->B.empty() && !rules->S.empty()) {
-        QMessageBox::information(this, tr("The End"), tr("Select B!"), QMessageBox::Ok);
+        QMessageBox::information(this, tr("Attention"), tr("Select B!"), QMessageBox::Ok);
+        rules->exec();
     }
     if (rules->S.empty() && !rules->B.empty()) {
-        QMessageBox::information(this, tr("The End"), tr("Select S!"), QMessageBox::Ok);
+        QMessageBox::information(this, tr("Attention"), tr("Select S!"), QMessageBox::Ok);
+        rules->exec();
     }
     if (rules->S.empty() && rules->B.empty()) {
-        QMessageBox::information(this, tr("The End"), tr("Select B and S!"), QMessageBox::Ok);
+        QMessageBox::information(this, tr("Attention"), tr("Select B and S!"), QMessageBox::Ok);
+        rules->exec();
     }
 }
 
 void MainWindow::selectSize() {
     size = new SizeDialog;
     size->exec();
-    painter->setSizeX(size->x);
-    painter->setSizeY(size->y);
+    if (size->x != 0 && size->y != 0) {
+        painter->setSizeX(size->x);
+        painter->setSizeY(size->y);
+    }
+    else if (size->x == 0 && size->y == 0) {
+        QMessageBox::information(this, tr("Attention"), tr("Set X and Y!"), QMessageBox::Ok);
+        size->exec();
+    }
+    else if (size->x == 0 && size->y != 0) {
+        QMessageBox::information(this, tr("Attention"), tr("Set X!"), QMessageBox::Ok);
+        size->exec();
+    }
+    else if (size->y == 0 && size->x != 0){
+        QMessageBox::information(this, tr("Attention"), tr("Set Y!"), QMessageBox::Ok);
+        size->exec();
+    }
 }
 
 void MainWindow::on_btnSave_clicked() {
@@ -80,8 +97,12 @@ void MainWindow::on_btnOpen_clicked() {
         this, tr("Open game"), QDir::homePath(),
         tr("(*.rle)"));
     QFile file(name);
-    if (!file.open(QIODevice::ReadOnly)) {}
+    if (!file.open(QIODevice::ReadOnly)) {
+        painter->startGame();
+        return;
+    }
     QTextStream in(&file);
     QString str = in.readAll();
     painter->getFile(str.toStdString());
+
 }
