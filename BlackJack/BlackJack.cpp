@@ -1,7 +1,8 @@
 #include "BlackJack.h"
 
-#include <iostream>
-#include <vector>
+BlackJack::BlackJack()  {}
+
+BlackJack::~BlackJack() {}
 
 int BlackJack::ChooseWinner(int first, std::string firstName, int second, std::string secondName) {
     std::cout<<"***Results of tournament***"<<std::endl;
@@ -108,7 +109,7 @@ std::unique_ptr<Strategy>& BlackJack::TournamentOfTwo(
     }
 }
 
-void BlackJack::fast (std::string first, std::string second, int CardMode, int NumberOfDecks, int GameMode) {
+void BlackJack::fast(std::string first, std::string second, int CardMode, int NumberOfDecks, int GameMode) {
     std::unique_ptr<Strategy> FirstStrategy(
                                             Factory<Strategy, std::string, Strategy *(*)()>::
                                             getInstance()->makeStrategy(first)
@@ -125,6 +126,11 @@ void BlackJack::fast (std::string first, std::string second, int CardMode, int N
 }
 
 void BlackJack::Tournament(std::vector<std::string> Players , int CardMode, int NumberOfDecks, int GameMode) {
+    if (Players.size() == 0) {
+        return;
+    }
+    currentPlayers.resize(currentPlayers.size());
+    currentPlayers = Players;
     std::string first;
     std::string second;
     for (int i = 0; i < Players.size() - 1; ++i) {
