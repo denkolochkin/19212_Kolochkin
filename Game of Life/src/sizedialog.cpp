@@ -1,7 +1,7 @@
 #include "sizedialog.h"
 #include "ui_sizedialog.h"
 
-SizeDialog::SizeDialog(QWidget *parent) : QDialog(parent), ui(new Ui::SizeDialog) {
+SizeDialog::SizeDialog(QWidget *parent) : QDialog(parent), x(0), y(0), ui(new Ui::SizeDialog) {
     ui->setupUi(this);
 }
 
@@ -20,4 +20,3 @@ void SizeDialog::on_spinBoxSizeY_valueChanged(int arg1) {
 void SizeDialog::on_btnOK_clicked() {
     close();
 }
-
