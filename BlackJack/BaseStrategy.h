@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Strategy.h"
+#include "Factory.h"
 
-enum modes {
-    Pass, EASY, DECK, HARD, QUIT, DETAILED, TOURNAMENT, FAST
-};
+#include <iostream>
+#include <vector>
 
 class BaseStrategy : public Strategy {
 public:
