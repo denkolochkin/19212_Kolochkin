@@ -9,7 +9,7 @@ static bool g(){
     return true;
 }
 
-static bool b=g();
+static bool b = g();
 
 int NotSoStupidStrategy::details(std::vector<int> History, int CurrentCard) {
     std::cout<<"Details of not so stupid strategy:"<<std::endl;
