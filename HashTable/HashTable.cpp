@@ -26,7 +26,7 @@ HashTable::HashTable(const HashTable &b) {       //copy constructor
     for (size_t i = 0; i < b.table_size; ++i) {
         if (b.nodes[i] != nullptr) {
             insert(b.nodes[i]->key, b.nodes[i]->value);     //insert every element
-            if (b.nodes[i]->next != nullptr) {
+            if (b.nodes[i]->next != nullptr){
                 while (b.nodes[i]->next != nullptr) {   //if found a chain
                     b.nodes[i] = b.nodes[i]->next;
                     insert(b.nodes[i]->key, b.nodes[i]->value);
@@ -51,7 +51,7 @@ HashTable& HashTable::operator=(const HashTable &b) {
     nodes = new Node*[table_size];
     std::fill(nodes,nodes + table_size, nullptr);
     for (size_t i = 0; i < b.table_size; ++i) {
-        if (b.nodes[i] != nullptr) { 
+        if (b.nodes[i] != nullptr) {
             insert(b.nodes[i]->key, b.nodes[i]->value);     //insert every element
             if (b.nodes[i]->next != nullptr) {
                 while (b.nodes[i]->next != nullptr) {       //if found a chain
@@ -78,7 +78,7 @@ void HashTable::clear() {
 }
 
 bool HashTable::erase(const Key &k) {
-    if (!contains(k))
+    if (!contains(k)) 
         return false;
     int index = get_hash(k);
     if (nodes[index]->key == k) {       //if first in chain element is necessary
@@ -110,7 +110,7 @@ void HashTable::resize_table() {
     for (size_t i = 0; i < table_size; ++i) {      //go around the table and insert all of elements in new table
         if (nodes[i] != nullptr && nodes[i]->next != nullptr) { //if found a chain
             Node* tmp = nodes[i];
-            while (tmp != nullptr) {     //insert in order
+            while (tmp != nullptr){     //insert in order
                 new_table->insert(tmp->key, tmp->value);
                 tmp = tmp->next;
             }
@@ -186,7 +186,7 @@ Value& HashTable::at(const Key &k) {
     else{
         while (nodes[index]->next != nullptr) {
             nodes[index] = nodes[index]->next;
-            if (nodes[index]->key == k) {
+            if (nodes[index]->key == k){
                 return nodes[index]->value;
             }
         }
@@ -208,12 +208,11 @@ const Value& HashTable::at(const Key &k) const {
 }
 
 size_t HashTable::size() const {
-    return table_size;
+    return current_table_size;
 }
 
 bool HashTable::empty() const {
-    if (table_size == 0) 
-        return true;
+    if (current_table_size == 0) return true;
     else
         return false;
 }
@@ -224,14 +223,12 @@ bool operator==(const HashTable &a, const HashTable &b) {
     for (size_t i = 0; i < a.table_size; ++i) {
         if (a.nodes[i] != nullptr) {        //if not a chain
             if (a.nodes[i]->next == nullptr) {
-                if (!b.contains(a.nodes[i]->key))  //compare
-                    return false;    
+                if (!b.contains(a.nodes[i]->key)) return false;     //compare
             }
             else {
                 HashTable::Node *tmp = a.nodes[i];         //if a chain
                 while (tmp != nullptr) {
-                    if (!b.contains(a.nodes[i]->key))  //compare all of elements in a chain
-                        return false;    
+                    if (!b.contains(a.nodes[i]->key)) return false;     //compare all of elements in a chain
                     tmp = tmp->next;
                 }
             }
@@ -255,3 +252,6 @@ int HashTable::get_hash(const Key &key) const {     //polynomial hash functions
     hash_result %= table_size;
     return hash_result;
 }
+
+
+
