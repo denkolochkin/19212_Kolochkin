@@ -34,15 +34,12 @@ void MainWindow::selectRules() {
     }
     if (rules->B.empty() && !rules->S.empty()) {
         QMessageBox::information(this, tr("Attention"), tr("Select B!"), QMessageBox::Ok);
-        rules->exec();
     }
     if (rules->S.empty() && !rules->B.empty()) {
         QMessageBox::information(this, tr("Attention"), tr("Select S!"), QMessageBox::Ok);
-        rules->exec();
     }
     if (rules->S.empty() && rules->B.empty()) {
         QMessageBox::information(this, tr("Attention"), tr("Select B and S!"), QMessageBox::Ok);
-        rules->exec();
     }
 }
 
@@ -55,15 +52,12 @@ void MainWindow::selectSize() {
     }
     else if (size->x == 0 && size->y == 0) {
         QMessageBox::information(this, tr("Attention"), tr("Set X and Y!"), QMessageBox::Ok);
-        size->exec();
     }
     else if (size->x == 0 && size->y != 0) {
         QMessageBox::information(this, tr("Attention"), tr("Set X!"), QMessageBox::Ok);
-        size->exec();
     }
     else if (size->y == 0 && size->x != 0){
         QMessageBox::information(this, tr("Attention"), tr("Set Y!"), QMessageBox::Ok);
-        size->exec();
     }
 }
 
