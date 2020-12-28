@@ -1,19 +1,15 @@
 #include "NotSoStupidStrategy.h"
-#include "Factory.h"
-
-#include <iostream>
-#include <vector>
 
 Strategy *createNotSoStupidStrategy () {
     return new NotSoStupidStrategy;
 }
 
-static bool g() {
+static bool g(){
     Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("NotSoStupid", createNotSoStupidStrategy);
     return true;
 }
 
-static bool b = g();
+static bool b=g();
 
 int NotSoStupidStrategy::details(std::vector<int> History, int CurrentCard) {
     std::cout<<"Details of not so stupid strategy:"<<std::endl;
