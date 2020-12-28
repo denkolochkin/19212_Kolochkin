@@ -1,19 +1,15 @@
 #include "NeatStrategy.h"
-#include "Factory.h"
-
-#include <iostream>
-#include <vector>
 
 Strategy *createNeatStrategy () {
     return new NeatStrategy;
 }
 
-static bool g() {
+static bool g(){
     Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("Neat", createNeatStrategy);
     return true;
 }
 
-static bool b = g();
+static bool b=g();
 
 int NeatStrategy::details(std::vector<int> History, int CurrentCard) {
     std::cout<<"Details of neat strategy:"<<std::endl;
