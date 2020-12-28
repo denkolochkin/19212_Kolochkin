@@ -7,12 +7,13 @@ namespace{
         HashTable a;
     };
 
-    TEST_F(HashTableTest, size){
-        EXPECT_NE(0, a.size());
-    }
-
     TEST_F(HashTableTest, empty){
-        EXPECT_FALSE(a.empty());
+        HashTable b;
+        Value value(19, 170);
+        Key key = "lorem";
+        b.insert(key, value);
+        b.clear();
+        EXPECT_TRUE(b.empty());
     }
 
     TEST_F(HashTableTest, brackets_false){
@@ -124,20 +125,22 @@ namespace{
         a.insert("lorem",value);
         EXPECT_TRUE(a.contains("lor") == a.contains("em") == a.contains("sum"));
         EXPECT_TRUE(a.contains("ip") == a.contains("lorem"));
+        EXPECT_TRUE(a.size() == 5);
     }
-    
     TEST_F(HashTableTest, new_resize){
         HashTable a;
         Value value(1,1);
-        a.insert("lor",value);
-        a.insert("em",value);
-        a.insert("ip",value);
-        a.insert("sum",value);
-        a.insert("lorem",value);
+        a.insert("lor", value);
+        a.insert("em", value);
+        a.insert("ip", value);
+        a.insert("sum", value);
+        a.insert("lorem", value);
         a.insert("mor", value);
         a.insert("mus", value);
         EXPECT_TRUE(a.contains("lor") == a.contains("em") == a.contains("sum"));
         EXPECT_TRUE(a.contains("ip") == a.contains("lorem") == a.contains("mor"));
         EXPECT_TRUE(a.contains("mus"));
+        EXPECT_TRUE(a.size() == 7);
     }
+    
 }
