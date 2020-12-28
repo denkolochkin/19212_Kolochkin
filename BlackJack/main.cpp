@@ -1,11 +1,4 @@
 #include "BlackJack.h"
-#include <vector>
-#define EASY 1
-#define DECK 2
-#define HARD 3
-#define DETAILED 0
-#define TOURNAMENT 1
-#define FAST 4
 
 int main (int argc, char *argv[]) {
     int CardMode = EASY;
