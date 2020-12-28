@@ -7,7 +7,7 @@ BlackJack::~BlackJack() {}
 int BlackJack::ChooseWinner(int first, std::string firstName, int second, std::string secondName) {
     std::cout<<"***Results of tournament***"<<std::endl;
     if (first == Pass) {
-        if (second <= 21) {
+        if (second <= TwentyOne) {
             std::cout<<secondName<<" win with result: "<<second<<std::endl;
             std::cout<<firstName<<" lose - pass"<<std::endl;
             printf("\n");
@@ -20,7 +20,7 @@ int BlackJack::ChooseWinner(int first, std::string firstName, int second, std::s
         }
     }
     if (second == Pass) {
-        if (first <= 21) {
+        if (first <= TwentyOne) {
             std::cout<<firstName<<" win with result: "<<first<<std::endl;
             std::cout<<secondName<<" lose - pass"<<std::endl;
             printf("\n");
@@ -32,20 +32,20 @@ int BlackJack::ChooseWinner(int first, std::string firstName, int second, std::s
             return 0;
         }
     }
-    if (first == 21) {
+    if (first == TwentyOne) {
         std::cout<<firstName<<" - BlackJack"<<std::endl;
         std::cout<<secondName<<" - "<<second<<std::endl;
         printf("\n");
         return first;
     }
-    if (second == 21) {
+    if (second == TwentyOne) {
         std::cout<<secondName<<" - BlackJack"<<std::endl;
         std::cout<<firstName<<" - "<<second<<std::endl;
         printf("\n");
         return second;
     }
-    if (first > 21) {
-        if (second < 21) {
+    if (first > TwentyOne) {
+        if (second < TwentyOne) {
             std::cout<<secondName<<" win with result: "<<second<<std::endl;
             std::cout<<firstName<<" lose with result: "<<first<<std::endl;
             printf("\n");
@@ -55,8 +55,8 @@ int BlackJack::ChooseWinner(int first, std::string firstName, int second, std::s
         printf("\n");
         return 0;
     }
-    if (second > 21) {
-        if (first < 21) {
+    if (second > TwentyOne) {
+        if (first < TwentyOne) {
             std::cout<<firstName<<" win with result: "<<first<<std::endl;
             std::cout<<secondName<<" lose with result: "<<second<<std::endl;
             printf("\n");
@@ -66,7 +66,7 @@ int BlackJack::ChooseWinner(int first, std::string firstName, int second, std::s
         printf("\n");
         return 0;
     }
-    if (first <= 21 && second <= 21) {
+    if (first <= TwentyOne && second <= TwentyOne) {
         if (first < second) {
             std::cout<<secondName<<" win with result: "<<second<<std::endl;
             std::cout<<firstName<<" lose with result: "<<first<<std::endl;
