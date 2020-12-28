@@ -1,8 +1,4 @@
 #include "TrivialStrategy.h"
-#include "Factory.h"
-
-#include <iostream>
-#include <vector>
 
 Strategy *createTrivialStrategy () {
     return new TrivialStrategy;
