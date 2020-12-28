@@ -92,7 +92,6 @@ void MainWindow::on_btnOpen_clicked() {
         tr("(*.rle)"));
     QFile file(name);
     if (!file.open(QIODevice::ReadOnly)) {
-        painter->startGame();
         return;
     }
     QTextStream in(&file);
