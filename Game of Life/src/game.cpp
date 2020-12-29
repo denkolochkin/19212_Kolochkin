@@ -89,11 +89,7 @@ bool GameWidget::newGeneration() {
     if(notChanged == (canvasSizeX*canvasSizeY)) {
         return false;
     }
-    for(size_t k = 0; k < canvasSizeY; k++) {
-        for(size_t j = 0; j < canvasSizeX; j++) {
-            canvas[k][j] = nextCanvas[k][j];
-        }
-    }
+    canvas = nextCanvas;
     generations--;
     if(generations == 0) {
         return false;
