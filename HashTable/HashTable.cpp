@@ -238,9 +238,7 @@ bool operator==(const HashTable &a, const HashTable &b) {
 }
 
 bool operator!=(const HashTable &a, const HashTable &b) {
-    if (!(a == b))
-        return true;
-    return false;
+    return !(a == b);
 }
 
 int HashTable::get_hash(const Key &key) const {     //polynomial hash functions
