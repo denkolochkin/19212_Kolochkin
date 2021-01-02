@@ -1,5 +1,8 @@
 #include "painter.h"
 
+#include <algorithm>
+#include <QMessageBox>
+
 #define defaultColor "#000"
 
 PainterWidget::PainterWidget(QWidget *parent) : QWidget(parent), game(new GameWidget), timer(new QTimer(this)) {
@@ -9,12 +12,6 @@ PainterWidget::PainterWidget(QWidget *parent) : QWidget(parent), game(new GameWi
     timer->setInterval(100);
     connect(timer, SIGNAL(timeout()), this, SLOT(newGeneration()));
 }
-
-PainterWidget::~PainterWidget() {}
-
-void PainterWidget::startGame() { timer->start(); }
-
-void PainterWidget::stopGame() { timer->stop(); }
 
 void PainterWidget::newGeneration() {
     if(!game->newGeneration()) {
@@ -72,8 +69,8 @@ void PainterWidget::paintCanvas(QPainter& painter) {
     for(size_t k = 0; k < game->getCanvasSizeY(); k++) {
         for(size_t j = 0; j < game->getCanvasSizeX(); j++) {
             if(game->checkCell(k, j)) {
-                qreal left = (qreal)(Width * j); //-Width
-                qreal top  = (qreal)(Height * k);   //-Height
+                qreal left = (qreal)(Width * j);
+                qreal top  = (qreal)(Height * k);
                 QRectF rect(left, top, (qreal)Width, (qreal)Height);
                 painter.fillRect(rect, QBrush(mainColor));
             }
@@ -86,10 +83,6 @@ void PainterWidget::setMainColor(const QColor &color){
     update();
 }
 
-void PainterWidget::setB(std::vector<int> b) { game->getB(b); }
-
-void PainterWidget::setS(std::vector<int> s) { game->getS(s); }
-
 void PainterWidget::setSizeX(size_t x) {
     timer->stop();
     game->setSizeX(x);
@@ -101,19 +94,3 @@ void PainterWidget::setSizeY(size_t y) {
    game->setSizeY(y);
    update();
 }
-
-size_t PainterWidget::getSizeX() {
-    return game->getCanvasSizeX();
-}
-
-size_t PainterWidget::getSizeY() {
-    return game->getCanvasSizeY();
-}
-
-void PainterWidget::writeCanvas(std::string &s) { game->writeCanvas(s); }
-
-void PainterWidget::writeRule(std::string &s) { game->writeRule(s); }
-
-void PainterWidget::writeSizes(std::string &s) { game->writeSizes(s); }
-
-void PainterWidget::getFile(const std::string &s) { game->processFile(s); }
