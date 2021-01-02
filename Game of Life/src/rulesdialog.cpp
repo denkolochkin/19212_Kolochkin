@@ -1,7 +1,9 @@
 #include "rulesdialog.h"
 #include "ui_rulesdialog.h"
 
-RulesDialog::RulesDialog(QWidget *parent) : QDialog(parent), countB(9, 0), countS(9, 0), ui(new Ui::RulesDialog) {
+RulesDialog::RulesDialog(QWidget *parent) : QDialog(parent), 
+                                            countB(9, 0), countS(9, 0), 
+                                            ui(new Ui::RulesDialog) {
     ui->setupUi(this);
 }
 
