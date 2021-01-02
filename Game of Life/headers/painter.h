@@ -19,6 +19,7 @@ public:
     void setSizeY(size_t y);
     size_t getSizeX(){ return game->getCanvasSizeX(); };
     size_t getSizeY(){ return game->getCanvasSizeY();  };
+    void error();
 
 public slots:
     void startGame() { timer->start(); };
@@ -34,7 +35,7 @@ public slots:
     void writeCanvas(std::string &s){ game->writeCanvas(s); };
     void writeRule(std::string &s){ game->writeRule(s); };
     void writeSizes(std::string &s){ game->writeSizes(s); };
-    void getFile(const std::string &s){ game->processFile(s); };
+    bool getFile(const std::string &s){ return game->processFile(s); };
 
 private:
     GameWidget* game;
