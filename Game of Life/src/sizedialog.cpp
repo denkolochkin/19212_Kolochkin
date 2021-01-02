@@ -2,7 +2,8 @@
 #include "ui_sizedialog.h"
 
 SizeDialog::SizeDialog(QWidget *parent) : QDialog(parent), 
-                       x(0), y(0), ui(new Ui::SizeDialog) {
+                                          x(0), y(0), 
+                                          ui(new Ui::SizeDialog) {
     ui->setupUi(this);
 }
 
