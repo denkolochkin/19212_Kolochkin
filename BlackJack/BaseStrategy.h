@@ -3,7 +3,6 @@
 #include "Strategy.h"
 #include "Factory.h"
 
-#include <iostream>
 #include <vector>
 
 class BaseStrategy : public Strategy {
