@@ -24,4 +24,3 @@ private slots:
 private:
     Ui::SizeDialog *ui;
 };
-
