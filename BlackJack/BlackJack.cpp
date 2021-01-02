@@ -1,131 +1,70 @@
 #include "BlackJack.h"
+#include "Printer.h"
+#include "Factory.h"
 
 BlackJack::BlackJack()  {}
 
 BlackJack::~BlackJack() {}
 
-int BlackJack::ChooseWinner(int first, std::string firstName, int second, std::string secondName) {
-    std::cout<<"***Results of tournament***"<<std::endl;
-    if (first == Pass) {
-        if (second <= TwentyOne) {
-            std::cout<<secondName<<" win with result: "<<second<<std::endl;
-            std::cout<<firstName<<" lose - pass"<<std::endl;
-            printf("\n");
-            return 0;
-        }
-        else {
-            std::cout<<firstName<<" vs "<<secondName<<" - no winner"<<std::endl;
-            printf("\n");
-            return 0;
-        }
-    }
-    if (second == Pass) {
-        if (first <= TwentyOne) {
-            std::cout<<firstName<<" win with result: "<<first<<std::endl;
-            std::cout<<secondName<<" lose - pass"<<std::endl;
-            printf("\n");
-            return first;
-        }
-        else {
-            std::cout<<firstName<<" vs "<<secondName<<" - no winner"<< std::endl;
-            printf("\n");
-            return 0;
-        }
-    }
-    if (first == TwentyOne) {
-        std::cout<<firstName<<" - BlackJack"<<std::endl;
-        std::cout<<secondName<<" - "<<second<<std::endl;
-        printf("\n");
-        return first;
-    }
-    if (second == TwentyOne) {
-        std::cout<<secondName<<" - BlackJack"<<std::endl;
-        std::cout<<firstName<<" - "<<second<<std::endl;
-        printf("\n");
-        return second;
-    }
-    if (first > TwentyOne) {
-        if (second < TwentyOne) {
-            std::cout<<secondName<<" win with result: "<<second<<std::endl;
-            std::cout<<firstName<<" lose with result: "<<first<<std::endl;
-            printf("\n");
-            return second;
-        }
-        std::cout<<firstName<<" vs "<<secondName<<" - no winner"<< std::endl;
-        printf("\n");
-        return 0;
-    }
-    if (second > TwentyOne) {
-        if (first < TwentyOne) {
-            std::cout<<firstName<<" win with result: "<<first<<std::endl;
-            std::cout<<secondName<<" lose with result: "<<second<<std::endl;
-            printf("\n");
-            return first;
-        }
-        std::cout<<firstName<<" vs "<<secondName<<" - no winner"<< std::endl;
-        printf("\n");
-        return 0;
-    }
-    if (first <= TwentyOne && second <= TwentyOne) {
-        if (first < second) {
-            std::cout<<secondName<<" win with result: "<<second<<std::endl;
-            std::cout<<firstName<<" lose with result: "<<first<<std::endl;
-            printf("\n");
-            return second;
-        }
-        if (first > second) {
-            std::cout<<firstName<<" win with result: "<<first<<std::endl;
-            std::cout<<secondName<<" lose with result: "<<second<<std::endl;
-            printf("\n");
-            return first;
-        }
-    }
-}
-
 std::unique_ptr<Strategy>& BlackJack::TournamentOfTwo(
                                                        std::unique_ptr<Strategy>& first,
                                                        std::string firstName,
                                                        std::unique_ptr<Strategy>& second,
-                                                       std::string secondName,
-                                                       int Mode, int NumberOfDecks, int GameMode
+                                                       std::string secondName
                                                        ) {
-    int DealerCard = first->takeCard(Mode, NumberOfDecks);
-    int ResultOfFirst = first->play(DealerCard, Mode, NumberOfDecks, GameMode);
+    int DealerCard = first->takeCard(CardMode, NumberOfDecks);
+    int ResultOfFirst = first->play(DealerCard, CardMode, NumberOfDecks, GameMode);
     if (ResultOfFirst == QUIT) {
         first = nullptr;
         return first;
     }
-    int ResultOfSecond = second->play(DealerCard, Mode, NumberOfDecks, GameMode);
+    int ResultOfSecond = second->play(DealerCard, CardMode, NumberOfDecks, GameMode);
     if (ResultOfSecond == QUIT) {
         second = nullptr;
         return second;
     }
-    int ResultOfWinner =  ChooseWinner(ResultOfFirst, firstName, ResultOfSecond, secondName);
+    Printer printer;
+    printer.first = ResultOfFirst;
+    printer.firstName = firstName;
+    printer.second = ResultOfSecond;
+    printer.secondName = secondName;
+    int ResultOfWinner = printer.PrintWinner();
     if (ResultOfWinner == ResultOfFirst) {
         return first;
     }
-    else {
+    if (ResultOfWinner == ResultOfSecond) {
         return second;
     }
+    first = nullptr;
+    second = nullptr;
+    return first;
 }
 
-void BlackJack::fast(std::string first, std::string second, int CardMode, int NumberOfDecks, int GameMode) {
+void BlackJack::fast(std::vector<std::string> Players) {
     std::unique_ptr<Strategy> FirstStrategy(
                                             Factory<Strategy, std::string, Strategy *(*)()>::
-                                            getInstance()->makeStrategy(first)
+                                            getInstance()->makeStrategy(Players[0])
                                             );
     std::unique_ptr<Strategy> SecondStrategy(
                                              Factory<Strategy, std::string, Strategy *(*)()>::
-                                             getInstance()->makeStrategy(second)
+                                             getInstance()->makeStrategy(Players[1])
                                              );
     std::unique_ptr<Strategy> &Winner = TournamentOfTwo(
-                                                    FirstStrategy, first,
-                                                    SecondStrategy, second,
-                                                        CardMode, NumberOfDecks, GameMode
+                                                    FirstStrategy, Players[0],
+                                                    SecondStrategy, Players[1]
                                                        );
+    if (FirstStrategy == nullptr) {
+        WinnerName = "No winner";
+    }
+    if (Winner == FirstStrategy) {
+        WinnerName = Players[0];
+    }
+    if (Winner == SecondStrategy) {
+        WinnerName = Players[1];
+    }
 }
 
-void BlackJack::Tournament(std::vector<std::string> Players , int CardMode, int NumberOfDecks, int GameMode) {
+void BlackJack::Tournament(std::vector<std::string> Players) {
     if (Players.size() == 0) {
         return;
     }
@@ -142,8 +81,8 @@ void BlackJack::Tournament(std::vector<std::string> Players , int CardMode, int 
             std::unique_ptr<Strategy> SecondStrategy (Factory<Strategy, std::string, Strategy *(*)()>::
                                                       getInstance()->makeStrategy(second));
             std::unique_ptr<Strategy> &Winner = TournamentOfTwo(FirstStrategy, first,
-                                                                SecondStrategy, second,
-                                                                    CardMode, NumberOfDecks, GameMode);
+                                                                SecondStrategy, second
+                                                                );
         }
     }
 }
