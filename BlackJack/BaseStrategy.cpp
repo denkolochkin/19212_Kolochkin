@@ -1,5 +1,7 @@
 #include "BaseStrategy.h"
 
+#include <iostream>
+
 Strategy *createBaseStrategy () {
     return new BaseStrategy;
 }
@@ -67,12 +69,6 @@ int BaseStrategy::play(int DealerCard, int Mode, int NumberOfDecks, int GameMode
     CurrentCard = takeCard(Mode, NumberOfDecks);
     History.push_back(CurrentCard);
     Sum += CurrentCard;
-    if (DealerCard <= 7) {
-        if (GameMode == DETAILED) {
-            printf("Base strategy - pass \n");
-        }
-        return Pass;
-    }
     if (GameMode == DETAILED) {
         if(details(History, CurrentCard) == QUIT) {
             return QUIT;
