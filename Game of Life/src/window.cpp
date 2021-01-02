@@ -1,7 +1,15 @@
 #include "window.h"
 #include "ui_window.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow), currentColor(QColor("#000")), painter(new PainterWidget(this)) {
+#include <QColorDialog>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QString>
+#include <QTextStream>
+
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), 
+                       ui(new Ui::MainWindow), currentColor(QColor("#000")),
+                       painter(new PainterWidget(this)) {
     ui->setupUi(this);
     connect(ui->btnStart, SIGNAL(clicked()), painter, SLOT(startGame()));
     connect(ui->btnClear, SIGNAL(clicked()), painter, SLOT(clear()));
@@ -19,7 +27,8 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::selectMasterColor() {
-    QColor color = QColorDialog::getColor(currentColor, this, tr("Select color of figures"));
+    QColor color = QColorDialog::getColor(currentColor, this, 
+                                          tr("Select color of figures"));
     painter->setMainColor(color);
 }
 
@@ -33,13 +42,16 @@ void MainWindow::selectRules() {
         painter->setS(rules->S);
     }
     if (rules->B.empty() && !rules->S.empty()) {
-        QMessageBox::information(this, tr("Attention"), tr("Select B!"), QMessageBox::Ok);
+        QMessageBox::information(this, tr("Attention"), 
+                                 tr("Select B!"), QMessageBox::Ok);
     }
     if (rules->S.empty() && !rules->B.empty()) {
-        QMessageBox::information(this, tr("Attention"), tr("Select S!"), QMessageBox::Ok);
+        QMessageBox::information(this, tr("Attention"), 
+                                 tr("Select S!"), QMessageBox::Ok);
     }
     if (rules->S.empty() && rules->B.empty()) {
-        QMessageBox::information(this, tr("Attention"), tr("Select B and S!"), QMessageBox::Ok);
+        QMessageBox::information(this, tr("Attention"), 
+                                 tr("Select B and S!"), QMessageBox::Ok);
     }
 }
 
@@ -51,13 +63,16 @@ void MainWindow::selectSize() {
         painter->setSizeY(size->y);
     }
     else if (size->x == 0 && size->y == 0) {
-        QMessageBox::information(this, tr("Attention"), tr("Set X and Y!"), QMessageBox::Ok);
+        QMessageBox::information(this, tr("Attention"), 
+                                 tr("Set X and Y!"), QMessageBox::Ok);
     }
     else if (size->x == 0 && size->y != 0) {
-        QMessageBox::information(this, tr("Attention"), tr("Set X!"), QMessageBox::Ok);
+        QMessageBox::information(this, tr("Attention"), 
+                                 tr("Set X!"), QMessageBox::Ok);
     }
     else if (size->y == 0 && size->x != 0){
-        QMessageBox::information(this, tr("Attention"), tr("Set Y!"), QMessageBox::Ok);
+        QMessageBox::information(this, tr("Attention"), 
+                                 tr("Set Y!"), QMessageBox::Ok);
     }
 }
 
