@@ -5,12 +5,6 @@
 #include "sizedialog.h"
 
 #include <QMainWindow>
-#include <QWidget>
-#include <QColorDialog>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QString>
-#include <QTextStream>
 
 namespace Ui {
     class MainWindow;
