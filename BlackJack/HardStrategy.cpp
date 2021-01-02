@@ -1,4 +1,7 @@
 #include "HardStrategy.h"
+#include "Factory.h"
+
+#include <iostream>
 
 Strategy *createHardStrategy () {
     return new HardStrategy;
@@ -22,6 +25,7 @@ int HardStrategy::details(std::vector<int> History, int CurrentCard) {
         return QUIT;
     }
 }
+
 
 int HardStrategy::takeCard(int CardMode, int NumberOfDecks) {
     if (CardMode == EASY) {
