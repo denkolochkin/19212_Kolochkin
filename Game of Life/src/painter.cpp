@@ -1,6 +1,5 @@
 #include "painter.h"
 
-#include <algorithm>
 #include <QMessageBox>
 
 #define defaultColor "#000"
