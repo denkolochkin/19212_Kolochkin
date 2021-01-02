@@ -1,6 +1,6 @@
 #include "game.h"
 
-#include <algorithm>
+#include <string>
 
 GameWidget::GameWidget() : canvasSizeX(10), canvasSizeY(10) {
     canvas.resize(canvasSizeY);
