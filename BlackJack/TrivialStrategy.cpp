@@ -1,10 +1,13 @@
 #include "TrivialStrategy.h"
+#include "Factory.h"
+
+#include <iostream>
 
 Strategy *createTrivialStrategy () {
     return new TrivialStrategy;
 }
 
-static bool g(){
+static bool g() {
     Factory<Strategy, std::string,Strategy*(*)()>::getInstance()->addCreator("Trivial", createTrivialStrategy);
     return true;
 }
