@@ -97,3 +97,9 @@ void PainterWidget::setSizeY(size_t y) {
    game->setSizeY(y);
    update();
 }
+
+void PainterWidget::error() {
+    QMessageBox::information(this, tr("Error!"), 
+                             tr("Wrong file!"), QMessageBox::Ok);
+}
+
