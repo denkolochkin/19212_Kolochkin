@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Strategy.h"
-#include "Factory.h"
 
-#include <iostream>
 #include <vector>
 
 class TrivialStrategy : public Strategy {
