@@ -1,5 +1,7 @@
 #include "game.h"
 
+#include <algorithm>
+
 GameWidget::GameWidget() : canvasSizeX(10), canvasSizeY(10) {
     canvas.resize(canvasSizeY);
     for(size_t i = 0; i < canvasSizeY; ++i) {
@@ -14,12 +16,6 @@ GameWidget::GameWidget() : canvasSizeX(10), canvasSizeY(10) {
      B.push_back(3);
 }
 
-size_t GameWidget::getCanvasSizeX() { return canvasSizeX; }
-
-size_t GameWidget::getCanvasSizeY() { return canvasSizeY; }
-
-bool GameWidget::checkCell(size_t k, size_t j) { return canvas[k][j]; }
-
 void GameWidget::clear() {
    for(size_t k = 0; k < canvasSizeX; k++) {
       for(size_t j = 0; j < canvasSizeY; j++) {
@@ -27,8 +23,6 @@ void GameWidget::clear() {
       }
    }
 }
-
-void GameWidget::mouseEvent(size_t k, size_t j) { canvas[k][j] = !canvas[k][j]; }
 
 void GameWidget::moveEvent(size_t k, size_t j) {
     if(!canvas[k][j]) {
@@ -89,17 +83,17 @@ bool GameWidget::newGeneration() {
     if(notChanged == (canvasSizeX*canvasSizeY)) {
         return false;
     }
-    canvas = nextCanvas;
+    for(size_t k = 0; k < canvasSizeY; k++) {
+        for(size_t j = 0; j < canvasSizeX; j++) {
+            canvas[k][j] = nextCanvas[k][j];
+        }
+    }
     generations--;
     if(generations == 0) {
         return false;
     }
     return true;
 }
-
-void GameWidget::getB(std::vector<int> b) { B = b; }
-
-void GameWidget::getS(std::vector<int> s) { S = s; }
 
 void GameWidget::setSizeX(size_t x) {
     canvasSizeX = x;
@@ -294,7 +288,3 @@ bool GameWidget::processFile(const std::string s) {
     canvas = next;
     return true;
  }
-
-
-
-
