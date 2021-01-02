@@ -2,8 +2,6 @@
 
 #include "game.h"
 
-#include <algorithm>
-#include <QMessageBox>
 #include <QTimer>
 #include <QMouseEvent>
 #include <QPainter>
@@ -14,17 +12,17 @@ class PainterWidget : public QWidget {
 
 public:
     explicit PainterWidget(QWidget *parent = 0);
-    ~PainterWidget();
-    void setB(std::vector<int> b);
-    void setS(std::vector<int> s);
+    ~PainterWidget(){};
+    void setB(std::vector<int> b){ game->setB(b); };
+    void setS(std::vector<int> s){ game->setS(s); };
     void setSizeX(size_t x);
     void setSizeY(size_t y);
-    size_t getSizeX();
-    size_t getSizeY();
+    size_t getSizeX(){ return game->getCanvasSizeX(); };
+    size_t getSizeY(){ return game->getCanvasSizeY();  };
 
 public slots:
-    void startGame();
-    void stopGame();
+    void startGame() { timer->start(); };
+    void stopGame() { timer->stop(); };
     void clear();
     void setMainColor(const QColor &color);
     void newGeneration();
@@ -33,10 +31,10 @@ public slots:
     void paintEvent(QPaintEvent *event);
     void pressMouseEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
-    void writeCanvas(std::string &s);
-    void writeRule(std::string &s);
-    void writeSizes(std::string &s);
-    void getFile(const std::string &s);
+    void writeCanvas(std::string &s){ game->writeCanvas(s); };
+    void writeRule(std::string &s){ game->writeRule(s); };
+    void writeSizes(std::string &s){ game->writeSizes(s); };
+    void getFile(const std::string &s){ game->processFile(s); };
 
 private:
     GameWidget* game;
