@@ -4,7 +4,9 @@
 
 #define defaultColor "#000"
 
-PainterWidget::PainterWidget(QWidget *parent) : QWidget(parent), game(new GameWidget), timer(new QTimer(this)) {
+PainterWidget::PainterWidget(QWidget *parent) : QWidget(parent), 
+                                                game(new GameWidget), 
+                                                timer(new QTimer(this)) {
     mainColor = defaultColor;
     canvasSizeX = game->getCanvasSizeX();
     canvasSizeY = game->getCanvasSizeY();
@@ -14,7 +16,8 @@ PainterWidget::PainterWidget(QWidget *parent) : QWidget(parent), game(new GameWi
 
 void PainterWidget::newGeneration() {
     if(!game->newGeneration()) {
-        QMessageBox::information(this, tr("The End"), tr("Game finished."), QMessageBox::Ok);
+        QMessageBox::information(this, tr("The End"), 
+                                 tr("Game finished."), QMessageBox::Ok);
         stopGame();
     }
     update();
@@ -33,7 +36,8 @@ void PainterWidget::paintEvent(QPaintEvent *event) {
 }
 
 void PainterWidget::pressMouseEvent(QMouseEvent* event) {
-    game->mouseEvent((floor(event->y()/((double)height()/game->getCanvasSizeY()))), (floor(event->x()/((double)width()/game->getCanvasSizeX()))));
+    game->mouseEvent((floor(event->y()/((double)height()/game->getCanvasSizeY()))), 
+                     (floor(event->x()/((double)width()/game->getCanvasSizeX()))));
     update();
 }
 
