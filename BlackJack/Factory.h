@@ -4,6 +4,7 @@
 #include <string>
 
 template<class Product, class Id>
+
 struct DefaultErrorPolice {
     static Product *IdNotFound (const Id &name) {
         throw std::string ("BUSTED!");
@@ -29,11 +30,10 @@ public:
         static Factory f;
         return &f;
     };
-    
 private:
     Factory () = default;
     ~Factory () = default;
     Factory (const Factory &);
-    Factory &operator= (const Factory &);
+    Factory &operator=(const Factory &);
     std::unordered_map<Id, Creator> creators_;
 };
