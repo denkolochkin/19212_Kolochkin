@@ -1,10 +1,9 @@
 #include <math.h>
-#include <string>
 
 struct Value {
     unsigned age;
     unsigned weight;
-    Value() {age = 0; weight = 0;}
+    Value() { age = 0; weight = 0; }
     Value(unsigned age_, unsigned weight_): age(age_), weight(weight_){};
     friend bool operator==(const Value &a, const Value &b) {
         return a.weight == b.weight && a.age == b.age;
@@ -14,11 +13,43 @@ struct Value {
 template<class K, class V>
 class HashTable {
 private:
-    struct Node { 
+    struct Node {
         K key;
         V value;
         Node *next;
         Node(K key_, V value_, Node* next_) : key(key_), value(value_), next(next_){};
+    };
+    
+    void resize_table() {
+        HashTable* new_table = new HashTable;       //create a new table
+        new_table->table_size = table_size * 2;     //with size = 2 * (size current table)
+        for (size_t j = 0; j < new_table->table_size; ++j) {   //allocate memory for every element of new table
+            new_table->nodes[j] = (Node*) new Node*;
+            new_table->nodes[j] = nullptr;
+        }
+        for (size_t i = 0; i < table_size; ++i) {      //go around the table and insert all of elements in new table
+            if (nodes[i] && nodes[i]->next){ //if found a chain
+                Node* tmp = nodes[i];
+                while (tmp) {     //insert in order
+                    new_table->insert(tmp->key, tmp->value);
+                    tmp = tmp->next;
+                }
+            }
+            else if (nodes[i]) {
+                new_table->insert(nodes[i]->key, nodes[i]->value);
+            }
+        }
+        *this = *new_table;
+    };
+
+    int get_hash(const K &key) const {
+        int prime = 521;
+        unsigned long int hash_result = 0;
+        for (int i = 0; key[i] != 0; ++i) {
+            hash_result += key[i]*pow(prime, i);
+        }
+        hash_result %= table_size;
+        return hash_result;
     };
 
 public:
@@ -82,7 +113,7 @@ public:
         return *this;
     };
 
-    void clear(){
+    void clear() {
         for (size_t i = 0; i < table_size; ++i) {
             while (nodes[i]) {       //delete every element
                 Node* current = nodes[i]->next;
@@ -118,29 +149,7 @@ public:
             return true;
         }
     };
-
-    void resize_table() {
-        HashTable* new_table = new HashTable;       //create a new table
-        new_table->table_size = table_size * 2;     //with size = 2 * (size current table)
-        for (size_t j = 0; j < new_table->table_size; ++j) {   //allocate memory for every element of new table
-            new_table->nodes[j] = (Node*) new Node*;
-            new_table->nodes[j] = nullptr;
-        }
-        for (size_t i = 0; i < table_size; ++i) {      //go around the table and insert all of elements in new table
-            if (nodes[i] && nodes[i]->next) { //if found a chain
-                Node* tmp = nodes[i];
-                while (tmp) {     //insert in order
-                    new_table->insert(tmp->key, tmp->value);
-                    tmp = tmp->next;
-                }
-            }
-            else if (nodes[i]) {
-                new_table->insert(nodes[i]->key, nodes[i]->value);
-            }
-        }
-        *this = *new_table;
-    };
-
+    
     bool insert(const K &k, const V &value) {
         if (fill_factor >= 0.75) {
             resize_table();
@@ -173,7 +182,7 @@ public:
     bool contains(const K &k) const {
         int index;
         index = get_hash(k);
-        if (!nodes[index])  {
+        if (!nodes[index]) {
             return false;
         }
         if (nodes[index]) {
@@ -242,7 +251,7 @@ public:
         for (size_t i = 0; i < a.table_size; ++i) {
             if (a.nodes[i]) {       //if not a chain
                 if (!a.nodes[i]->next) {
-                    if (!b.contains(a.nodes[i]->key)) {//compare.
+                    if (!b.contains(a.nodes[i]->key)) { //compare.
                         return false;
                     }
                 }
@@ -263,55 +272,44 @@ public:
     friend bool operator!=(const HashTable &a, const HashTable &b) { return !(a == b); };
 
     bool empty() const { return current_table_size == 0; };
-
-    int get_hash(const K &key) const {
-        int prime = 521;
-        unsigned long int hash_result = 0;
-        for (int i = 0; key[i] != 0; ++i) {
-            hash_result += key[i]*pow(prime, i);
-        }
-        hash_result %= table_size;
-        return hash_result;
-    };
-
+    
     class Iterator {
     public:
-        Iterator(Node** nodes, size_t size, size_t node_index, size_t chain_index) :  nodes(nodes),
-                                                                                      table_size(size),
-                                                                                      node_index(node_index),
-                                                                                      chain_index(chain_index){};
-
+        Iterator(Node **nodes_, size_t node_index_, size_t chain_index_, size_t size_) :
+                                                                                         node(nodes_),
+                                                                                         node_index(node_index_),
+                                                                                         chain_index(chain_index_),
+                                                                                         size(size_){};
         ~Iterator(){};
 
         Iterator(const Iterator &a) {
-            nodes = a.nodes;
+            node = a.node;
             node_index = a.node_index;
-            chain_index = a.chain_index;
-            table_size = a.table_size;
+            chain_index= a.chain_index;
+            size = a.size;
         }
 
-        Iterator& operator=(const Iterator &a) {
-            if (this != a) {
-                nodes = a.nodes;
+        Iterator &operator=(const Iterator &a) {
+            if (&a != this) {
+                node = a.node;
                 node_index = a.node_index;
-                chain_index = a.chain_index;
-                table_size = a.table_size;
+                chain_index= a.chain_index;
+                size = a.size;
             }
             return *this;
         }
 
         friend bool operator==(const Iterator &a, const Iterator &b) {
-            return a.nodes == b.nodes && a.table_size == b.table_size &&
+            return a.node == b.node &&
                    a.chain_index == b.chain_index &&
-                   a.node_index == b.node_index;
+                   a.node_index == b.node_index &&
+                   a.size == b.size;
         }
 
-        friend bool operator!=(const Iterator &a, const Iterator &b) {
-            return !(a == b);
-        }
+        friend bool operator!=(const Iterator &a, const Iterator &b) { return !(a == b); }
 
-        Node& operator*() {
-            Node *tmp = nodes[chain_index];
+        Node &operator*() {
+            auto *tmp = node[chain_index];
             for (size_t i = 0; i < node_index; ++i) {
                 assert(tmp);
                 tmp = tmp->next;
@@ -319,17 +317,17 @@ public:
             return *tmp;
         }
 
-        Iterator& operator++() {
-            Node *tmp = nodes[chain_index];
+        Iterator &operator++() {
+            Node *tmp = node[chain_index];
             for (size_t i = 0; i < node_index; ++i) {
                 assert(tmp);
                 tmp = tmp->next;
             }
             if (!(tmp->next)) {
-                for (size_t i = node_index + 1; i < table_size; ++i) {
-                    if (nodes[i]) {
+                for (size_t i = chain_index + 1; i < size; ++i) {
+                    if (node[i]) {
                         node_index = 0;
-                        chain_index= i;
+                        chain_index = i;
                         return *this;
                     }
                 }
@@ -339,34 +337,34 @@ public:
         }
 
     private:
-        Node** nodes;
+        Node** node;
         size_t node_index;
         size_t chain_index;
-        size_t table_size;
+        size_t size;
     };
 
     Iterator begin() {
         for (size_t i = 0; i < table_size; ++i) {
             if (nodes[i]) {
-                return Iterator(nodes, table_size, 0, i);
+                return Iterator(nodes, 0, i, table_size);
             }
         }
-        return Iterator(nodes, table_size, 0, table_size);
+        return Iterator(nodes, 0, table_size, table_size);
     };
 
     Iterator end() {
         for (size_t i = table_size - 1; i >= 0; --i) {
             if (nodes[i]) {
                 Node *tmp = nodes[i];
-                size_t node_index = 0;
+                size_t t = 0;
                 while (tmp) {
                     tmp = tmp->next;
-                    ++node_index;
+                    ++t;
                 }
-                return Iterator(nodes, table_size, node_index, i);
+                return Iterator(nodes, t, i, table_size);
             }
         }
-        return Iterator(nodes, table_size, 0, table_size);
+        return Iterator(nodes, 0, table_size, table_size);
     }
 
 private:
