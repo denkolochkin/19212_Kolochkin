@@ -164,7 +164,7 @@ namespace{
     TEST_F(HashTableTest, template_contains) {
         HashTable<std::string, std::string> a;
         std::string value = "Apple";
-        std::string key = "World";
+        std::string key = "Orange";
         a.insert(key, value);
         EXPECT_TRUE(a.contains(key));
         EXPECT_TRUE(a.size() == 1);
@@ -172,7 +172,7 @@ namespace{
 
     TEST_F(HashTableTest, template_at) {
         HashTable<std::string, int> a;
-        std::string key = "World";
+        std::string key = "lorem";
         a.insert(key, 6);
         EXPECT_TRUE(a.at(key) == 6);
         EXPECT_TRUE(a.size() == 1);
@@ -180,7 +180,7 @@ namespace{
 
     TEST_F(HashTableTest, iterator_begin) {
         HashTable<std::string, Value> a;
-        std::string key = "World";
+        std::string key = "ipsum";
         a.insert(key, Value(19, 170));
         EXPECT_TRUE((*a.begin()).key == key);
     }
@@ -192,6 +192,42 @@ namespace{
         a.insert(key_1, Value(19, 170));
         a.insert(key_2, Value(18, 190));
         EXPECT_TRUE((*a.begin()).key == key_1);
+        EXPECT_TRUE(a.size() == 2);
+    }
+
+    TEST_F(HashTableTest, iterator_erase) {
+        HashTable<std::string, Value> a;
+        std::string key_1 = "World";
+        std::string key_2 = "lorem";
+        a.insert(key_1, Value(19, 170));
+        a.insert(key_2, Value(18, 190));
+        EXPECT_TRUE((*a.begin()).key == key_1);
+        a.clear();
+        std::string key_3 = "lor";
+        std::string key_4 = "ips";
+        a.insert(key_3, Value(23, 164));
+        a.insert(key_4, Value(21, 180));
+        auto i = a.begin();
+        EXPECT_TRUE((*i).value.age == 21);
+        ++i;
+        EXPECT_TRUE((*i).value.age == 23);
+    }
+
+    TEST_F(HashTableTest, iterator_size) {
+        HashTable<std::string, Value> a;
+        std::string key_1 = "World";
+        std::string key_2 = "lorem";
+        std::string key_3 = "lor";
+        std::string key_4 = "ips";
+        a.insert(key_1, Value(19, 170));
+        a.insert(key_2, Value(18, 190));
+        a.insert(key_3, Value(23, 164));
+        a.insert(key_4, Value(21, 180));
+        size_t s = 0;
+        for (auto i : a) {
+            s++;
+        }
+        EXPECT_TRUE(s == a.size());
     }
 
 }
