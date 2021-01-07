@@ -192,6 +192,7 @@ namespace{
         a.insert(key_1, Value(19, 170));
         a.insert(key_2, Value(18, 190));
         EXPECT_TRUE((*a.begin()).key == key_1);
+        EXPECT_TRUE((*a.begin()).value.weight == 170);
         EXPECT_TRUE(a.size() == 2);
     }
 
@@ -209,8 +210,10 @@ namespace{
         a.insert(key_4, Value(21, 180));
         auto i = a.begin();
         EXPECT_TRUE((*i).value.age == 21);
+        EXPECT_TRUE((*i).key == key_4);
         ++i;
         EXPECT_TRUE((*i).value.age == 23);
+        EXPECT_TRUE((*i).key == key_3);
     }
 
     TEST_F(HashTableTest, iterator_size) {
