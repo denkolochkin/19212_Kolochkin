@@ -2,8 +2,8 @@
 #include "BlackJack.h"
 
 namespace {
-
     class BlackJackTest : public ::testing::Test {};
+    
     TEST_F(BlackJackTest, fast) {
         BlackJack game;
         game.GameMode = FAST;
@@ -119,4 +119,65 @@ namespace {
         EXPECT_TRUE(game.currentPlayers.size() == 0);
     }
 
+    TEST_F(BlackJackTest, BlackJack_equal) {
+        BlackJack game;
+        BlackJack new_game;
+        game.GameMode = TOURNAMENT;
+        game.CardMode = DECK;
+        game.NumberOfDecks = 2;
+        srand(time(0));
+        std::vector<std::string> Players;
+        Players.push_back("Trivial");
+        Players.push_back("NotSoStupid");
+        game = new_game;
+        new_game.Tournament(Players);
+        EXPECT_TRUE(new_game.currentPlayers == Players);
+    }
+
+    TEST_F(BlackJackTest, BlackJack_operator) {
+        BlackJack game;
+        BlackJack new_game;
+        game.GameMode = TOURNAMENT;
+        game.CardMode = DECK;
+        game.NumberOfDecks = 2;
+        std::vector<std::string> Players;
+        Players.push_back("Trivial");
+        Players.push_back("NotSoStupid");
+        game = new_game;
+        EXPECT_TRUE(game == new_game);
+    }
+
+    TEST_F(BlackJackTest, BlackJack_other_operator) {
+        BlackJack game;
+        BlackJack new_game;
+        game.GameMode = TOURNAMENT;
+        game.CardMode = DECK;
+        game.NumberOfDecks = 2;
+        std::vector<std::string> Players1;
+        Players1.push_back("Trivial");
+        Players1.push_back("NotSoStupid");
+        game.currentPlayers = Players1;
+        new_game.GameMode = TOURNAMENT;
+        new_game.CardMode = DECK;
+        new_game.NumberOfDecks = 3;
+        std::vector<std::string> Players2;
+        Players2.push_back("Base");
+        Players2.push_back("Stupid");
+        new_game.currentPlayers = Players2;
+        EXPECT_FALSE(game == new_game);
+    }
+
+    TEST_F(BlackJackTest, BlackJack_copy_ctor) {
+        BlackJack game;
+        game.GameMode = TOURNAMENT;
+        game.CardMode = DECK;
+        game.NumberOfDecks = 2;
+        std::vector<std::string> Players;
+        Players.push_back("Trivial");
+        Players.push_back("NotSoStupid");
+        game.currentPlayers = Players;
+        BlackJack new_game(game);
+        EXPECT_TRUE(game == new_game);
+    }
+    
 }
