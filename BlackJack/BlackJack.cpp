@@ -2,9 +2,36 @@
 #include "Printer.h"
 #include "Factory.h"
 
-BlackJack::BlackJack()  {}
+BlackJack::BlackJack() {}
 
 BlackJack::~BlackJack() {}
+
+BlackJack::BlackJack(BlackJack &b) {
+    currentPlayers = b.currentPlayers;
+    CardMode = b.CardMode;
+    NumberOfDecks = b.NumberOfDecks;
+    GameMode = b.GameMode;
+    WinnerName = b.WinnerName;
+}
+
+BlackJack& BlackJack::operator=(BlackJack &b) {
+    if (!(*this == b)) {
+        currentPlayers = b.currentPlayers;
+        CardMode = b.CardMode;
+        NumberOfDecks = b.NumberOfDecks;
+        GameMode = b.GameMode;
+        WinnerName = b.WinnerName;
+    }
+    return *this;
+}
+
+bool BlackJack::operator==(BlackJack &b) {
+    return currentPlayers == b.currentPlayers &&
+           CardMode == b.CardMode &&
+           NumberOfDecks == b.NumberOfDecks &&
+           GameMode == b.GameMode &&
+           WinnerName == b.WinnerName;
+}
 
 std::unique_ptr<Strategy>& BlackJack::TournamentOfTwo(
                                                        std::unique_ptr<Strategy>& first,
@@ -62,6 +89,7 @@ void BlackJack::fast(std::vector<std::string> Players) {
     if (Winner == SecondStrategy) {
         WinnerName = Players[1];
     }
+
 }
 
 void BlackJack::Tournament(std::vector<std::string> Players) {
