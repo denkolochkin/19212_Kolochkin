@@ -227,7 +227,7 @@ namespace{
         a.insert(key_3, Value(23, 164));
         a.insert(key_4, Value(21, 180));
         size_t s = 0;
-        for (auto i : a) {
+        for (auto i = a.begin(); i != a.end(); i++) {
             s++;
         }
         EXPECT_TRUE(s == a.size());
