@@ -38,7 +38,7 @@ public slots:
     bool getFile(const std::string &s){ return game->processFile(s); };
 
 private:
-    GameWidget* game;
+    Game* game;
     QColor mainColor;
     QTimer* timer;
     size_t canvasSizeX;
