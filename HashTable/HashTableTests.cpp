@@ -4,6 +4,15 @@
 namespace{
     class HashTableTest : public ::testing::Test {
     protected:
+        struct Value {
+            unsigned age;
+            unsigned weight;
+            Value() { age = 0; weight = 0; }
+            Value(unsigned age_, unsigned weight_): age(age_), weight(weight_){};
+            friend bool operator==(const Value &a, const Value &b) {
+                return a.weight == b.weight && a.age == b.age;
+            };
+        };
         HashTable<std::string, Value> a;
     };
 
@@ -152,13 +161,10 @@ namespace{
         a.insert("ip", value);
         a.insert("sum", value);
         a.insert("lorem", value);
-        a.insert("mor", value);
-        a.insert("rom", value);
         HashTable<std::string, Value> b;
         b = a;
         EXPECT_TRUE(b.contains("lor") == b.contains("em") == b.contains("sum"));
-        EXPECT_TRUE(b.contains("ip") == b.contains("lorem") == b.contains("mor"));
-        EXPECT_TRUE(b.contains("rom"));
+        EXPECT_TRUE(b.contains("ip") == b.contains("lorem"));
     }
 
     TEST_F(HashTableTest, template_contains) {
@@ -227,10 +233,41 @@ namespace{
         a.insert(key_3, Value(23, 164));
         a.insert(key_4, Value(21, 180));
         size_t s = 0;
-        for (auto i = a.begin(); i != a.end(); i++) {
+        for (auto i = a.begin(); i != a.end(); ++i) {
             s++;
         }
-        EXPECT_TRUE(s == a.size());
+        EXPECT_TRUE(s == a.size() - 1);
     }
 
+    TEST_F(HashTableTest, iterator_size_new) {
+        HashTable<std::string, Value> a;
+        std::string key_1 = "World";
+        std::string key_2 = "lorem";
+        std::string key_3 = "lor";
+        std::string key_4 = "ips";
+        a.insert(key_1, Value(19, 170));
+        a.insert(key_2, Value(18, 190));
+        a.insert(key_3, Value(23, 164));
+        a.insert(key_4, Value(21, 180));
+        size_t s = 0;
+        for (auto i = a.end(); i != a.begin(); --i) {
+            s++;
+        }
+        EXPECT_TRUE(s == a.size() - 1);
+    }
+
+    TEST_F(HashTableTest, iterator_operator_arrow) {
+        HashTable<std::string, Value> a;
+        std::string key_1 = "World";
+        std::string key_2 = "lorem";
+        std::string key_3 = "lor";
+        std::string key_4 = "ips";
+        a.insert(key_1, Value(19, 170));
+        a.insert(key_2, Value(18, 190));
+        a.insert(key_3, Value(23, 164));
+        a.insert(key_4, Value(21, 180));
+        auto i = a.begin();
+        auto n = i.operator->();
+        EXPECT_TRUE(n->key == key_2);
+    }
 }
