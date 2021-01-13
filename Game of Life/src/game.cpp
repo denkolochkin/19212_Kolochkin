@@ -2,13 +2,13 @@
 
 #include <string>
 
-GameWidget::GameWidget() : canvasSizeX(10), canvasSizeY(10) {
+Game::Game() : canvasSizeX(10), canvasSizeY(10) {
     canvas.resize(canvasSizeY);
-    for(size_t i = 0; i < canvasSizeY; ++i) {
+    for (size_t i = 0; i < canvasSizeY; ++i) {
         canvas[i].resize(canvasSizeX, false);
      }
      nextCanvas.resize(canvasSizeY);
-     for(size_t i = 0; i < canvasSizeY; ++i) {
+     for (size_t i = 0; i < canvasSizeY; ++i) {
          nextCanvas[i].resize(canvasSizeX, false);
      }
      S.push_back(2);
@@ -16,32 +16,32 @@ GameWidget::GameWidget() : canvasSizeX(10), canvasSizeY(10) {
      B.push_back(3);
 }
 
-void GameWidget::clear() {
-   for(size_t k = 0; k < canvasSizeX; k++) {
-      for(size_t j = 0; j < canvasSizeY; j++) {
+void Game::clear() {
+   for (size_t k = 0; k < canvasSizeX; k++) {
+      for (size_t j = 0; j < canvasSizeY; j++) {
             canvas[j][k] = false;
       }
    }
 }
 
-void GameWidget::moveEvent(size_t k, size_t j) {
-    if(!canvas[k][j]) {
+void Game::moveEvent(size_t k, size_t j) {
+    if (!canvas[k][j]) {
         canvas[k][j] = !canvas[k][j];
     }
 }
 
-void GameWidget::resetCanvas() {
+void Game::resetCanvas() {
     canvas.resize(canvasSizeY);
-    for(size_t i = 0; i < canvasSizeY; ++i) {
+    for (size_t i = 0; i < canvasSizeY; ++i) {
         canvas[i].resize(canvasSizeX, false);
     }
     nextCanvas.resize(canvasSizeY);
-    for(size_t i = 0; i < canvasSizeY; ++i) {
+    for (size_t i = 0; i < canvasSizeY; ++i) {
         nextCanvas[i].resize(canvasSizeX, false);
     }
 }
 
-bool GameWidget::isAlive(size_t k, size_t j) {
+bool Game::isAlive(size_t k, size_t j) {
     int neighbors = 0;
     neighbors += canvas[(k + 1) % canvasSizeY]
                        [j % canvasSizeX];
@@ -59,43 +59,43 @@ bool GameWidget::isAlive(size_t k, size_t j) {
                        [(j - 1 + canvasSizeX) % canvasSizeX];
     neighbors += canvas[(k + 1) % canvasSizeY]
                        [(j + 1) % canvasSizeX];
-    if(canvas[k][j] && (*std::find(S.begin(), S.end(), neighbors) == neighbors)) {
+    if (canvas[k][j] && (*std::find(S.begin(), S.end(), neighbors) == neighbors)) {
         return true;
     }
-    if(!canvas[k][j] && (*std::find(B.begin(), B.end(), neighbors) == neighbors)) {
+    if (!canvas[k][j] && (*std::find(B.begin(), B.end(), neighbors) == neighbors)) {
         return true;
     }
     return false;
 }
 
-bool GameWidget::newGeneration() {
-    if(generations < 0) {
+bool Game::newGeneration() {
+    if (generations < 0) {
         generations++;
     }
     size_t notChanged = 0;
-    for(size_t k = 0; k < canvasSizeY; k++) {
-        for(size_t j = 0; j < canvasSizeX; j++) {
+    for (size_t k = 0; k < canvasSizeY; k++) {
+        for (size_t j = 0; j < canvasSizeX; j++) {
             nextCanvas[k][j] = isAlive(k, j);
             if(nextCanvas[k][j] == canvas[k][j])
                 notChanged++;
         }
     }
-    if(notChanged == (canvasSizeX*canvasSizeY)) {
+    if (notChanged == (canvasSizeX*canvasSizeY)) {
         return false;
     }
-    for(size_t k = 0; k < canvasSizeY; k++) {
-        for(size_t j = 0; j < canvasSizeX; j++) {
+    for (size_t k = 0; k < canvasSizeY; k++) {
+        for (size_t j = 0; j < canvasSizeX; j++) {
             canvas[k][j] = nextCanvas[k][j];
         }
     }
     generations--;
-    if(generations == 0) {
+    if (generations == 0) {
         return false;
     }
     return true;
 }
 
-void GameWidget::setSizeX(size_t x) {
+void Game::setSizeX(size_t x) {
     canvasSizeX = x;
     for (size_t i = 0; i < canvasSizeY; i++) {
         canvas[i].resize(canvasSizeX, false);
@@ -105,7 +105,7 @@ void GameWidget::setSizeX(size_t x) {
     }
 }
 
-void GameWidget::setSizeY(size_t y) {
+void Game::setSizeY(size_t y) {
     canvasSizeY = y;
     canvas.resize(y);
     for (size_t i = 0; i < canvasSizeY; i++) {
@@ -117,7 +117,7 @@ void GameWidget::setSizeY(size_t y) {
     }
 }
 
-void GameWidget::change(std::string &s, char c, size_t count) {
+void Game::change(std::string &s, char c, size_t count) {
     if (count == 1) {
         s += c;
     }
@@ -127,7 +127,7 @@ void GameWidget::change(std::string &s, char c, size_t count) {
     }
 }
 
-void GameWidget::writeCanvas(std::string &s) {
+void Game::writeCanvas(std::string &s) {
     size_t count = 0;
     bool flag;
     for (size_t i = 0; i < canvasSizeY; ++i) {
@@ -162,7 +162,7 @@ void GameWidget::writeCanvas(std::string &s) {
     s += "!";
 }
 
-void GameWidget::writeRule(std::string &s) {
+void Game::writeRule(std::string &s) {
     s = "B";
     for (auto i : B) {
         s += std::to_string(i);
@@ -173,14 +173,14 @@ void GameWidget::writeRule(std::string &s) {
     }
 }
 
-void GameWidget::writeSizes(std::string &s) {
+void Game::writeSizes(std::string &s) {
     s = "x = ";
     s += std::to_string(canvasSizeX);
     s += ", y = ";
     s+= std::to_string(canvasSizeY);
 }
 
-bool GameWidget::processFile(const std::string s) {
+bool Game::processFile(const std::string s) {
     size_t x = 0;
     size_t y = 0;
     std::vector<int> newB;
@@ -207,9 +207,9 @@ bool GameWidget::processFile(const std::string s) {
         }
     }
     for (size_t i = 0; i < s.size(); i++) {
-        if(s[i] == 'B') {
+        if (s[i] == 'B') {
             i++;
-            while(s[i] != '/') {
+            while (s[i] != '/') {
                 if ((s[i] - '0') < 0 || (s[i] - '0') > 9) {
                     return false;
                 }
@@ -217,9 +217,9 @@ bool GameWidget::processFile(const std::string s) {
                 i++;
             }
         }
-        if(s[i] == 'S') {
+        if (s[i] == 'S') {
             i++;
-            while(s[i] != '\n') {
+            while (s[i] != '\n') {
                 if ((s[i] - '0') < 0 || (s[i] - '0') > 9) {
                     return false;
                 }
@@ -250,7 +250,7 @@ bool GameWidget::processFile(const std::string s) {
                 }
                 if ((s[i] - '0') >= 0 && (s[i] - '0') <= 9) {
                     count = 0;
-                    while(s[i] != 'b' && s[i] != 'o') {
+                    while (s[i] != 'b' && s[i] != 'o') {
                         count = count * 10 + (s[i] - '0');
                         i++;
                     }
@@ -258,14 +258,14 @@ bool GameWidget::processFile(const std::string s) {
                         return false;
                     }
                     if (s[i] == 'b') {
-                        for(size_t j = 1; j <= count; j++) {
+                        for (size_t j = 1; j <= count; j++) {
                             next[y][position] = false;
                             position++;
                         }
                         count = 0;
                     }
                     if (s[i] == 'o') {
-                        for(size_t j = 1; j <= count; j++) {
+                        for (size_t j = 1; j <= count; j++) {
                             next[y][position] = true;
                             position++;
                         }
@@ -273,7 +273,7 @@ bool GameWidget::processFile(const std::string s) {
                     }
                     i++;
                 }
-                if(s[i] == '$') {
+                if (s[i] == '$') {
                     y++;
                     position = 0;
                     i++;
