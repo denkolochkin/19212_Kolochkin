@@ -2,10 +2,10 @@
 
 #include <vector>
 
-class GameWidget {
+class Game {
 
 public:
-    GameWidget();
+    Game();
     size_t getCanvasSizeX(){ return canvasSizeX; };
     size_t getCanvasSizeY(){ return canvasSizeY; };
     void mouseEvent(size_t k, size_t j){ canvas[k][j] = !canvas[k][j]; };
@@ -33,5 +33,4 @@ private:
     size_t canvasSizeY;
     std::vector<int> B;
     std::vector<int> S;
-
 };
