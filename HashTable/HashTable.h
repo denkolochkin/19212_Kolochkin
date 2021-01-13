@@ -1,14 +1,5 @@
-#include <math.h>
 
-struct Value {
-    unsigned age;
-    unsigned weight;
-    Value() { age = 0; weight = 0; }
-    Value(unsigned age_, unsigned weight_): age(age_), weight(weight_){};
-    friend bool operator==(const Value &a, const Value &b) {
-        return a.weight == b.weight && a.age == b.age;
-    };
-};
+
 
 template<class K, class V>
 class HashTable {
@@ -19,7 +10,7 @@ private:
         Node *next;
         Node(K key_, V value_, Node* next_) : key(key_), value(value_), next(next_){};
     };
-    
+
     void resize_table() {
         HashTable* new_table = new HashTable;       //create a new table
         new_table->table_size = table_size * 2;     //with size = 2 * (size current table)
@@ -43,11 +34,7 @@ private:
     };
 
     int get_hash(const K &key) const {
-        int prime = 521;
-        unsigned long int hash_result = 0;
-        for (int i = 0; key[i] != 0; ++i) {
-            hash_result += key[i]*pow(prime, i);
-        }
+        unsigned int hash_result = std::hash<K>()(key);
         hash_result %= table_size;
         return hash_result;
     };
@@ -149,7 +136,7 @@ public:
             return true;
         }
     };
-    
+
     bool insert(const K &k, const V &value) {
         if (fill_factor >= 0.75) {
             resize_table();
@@ -204,7 +191,7 @@ public:
     V &operator[](const K &k) {
         int index = get_hash(k);
         if (!nodes[index]) {
-            insert(k, Value());       //default value
+            insert(k, V());       //default value
             return nodes[index]->value;
         }
         else {
@@ -272,7 +259,7 @@ public:
     friend bool operator!=(const HashTable &a, const HashTable &b) { return !(a == b); };
 
     bool empty() const { return current_table_size == 0; };
-    
+
     class Iterator {
     public:
         Iterator(Node **nodes_, size_t node_index_, size_t chain_index_, size_t size_) :
@@ -316,6 +303,32 @@ public:
             }
             return *tmp;
         }
+        
+        Node *operator->() {
+            return &node[chain_index][node_index];
+        }
+
+        Iterator &operator--() {
+            if (node_index == 0 && chain_index == 0) {
+                return *this;
+            }
+            if (node_index == 0) {
+                chain_index--;
+                while (!node[chain_index]) {
+                    chain_index--;
+                }
+                Node *tmp = node[chain_index];
+                while (tmp) {
+                    assert(tmp);
+                    tmp = tmp->next;
+                    node_index++;
+                }
+                node_index--;
+                return *this;
+            }
+            node_index--;
+            return *this;
+        }
 
         Iterator &operator++() {
             Node *tmp = node[chain_index];
@@ -332,7 +345,7 @@ public:
                     }
                 }
             }
-            ++node_index;
+            node_index++;
             return *this;
         }
 
