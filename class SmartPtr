@@ -1,86 +1,61 @@
-#include <iostream>
-struct A {
-    A() {std::cout << "Ctor" << std::endl;}
-    A(int i) {std::cout << "Int" << i << std::endl;}
-    ~A() {std::cout << "Dtor" << std::endl;}
-    A(const A&) { std::cout << "Copy" << std::endl;}
-    A& operator=(const A&){ std::cout << "assign" << std::endl; return *this;}
-    void hello(){std::cout<<"hello"<<std::endl;}
-};
-
+template <class T>
 class SmartPtr {
 public:
-    SmartPtr() {
-        a_ = new(A);
-        count_ptr = 1;
+    SmartPtr() : raw_pointer_(nullptr){};
 
-    };
-    SmartPtr(A * a) : a_(a) {
-         a_ = new(A);
-         count_ptr = 1;
-    }
     ~SmartPtr() {
-        if (count_ptr > 1){
-            count_ptr--;
-        }
-        else {
-            delete a_;
-        }
-    }
-
-    SmartPtr(const SmartPtr& temp) {
-        a_ = temp.a_;
-        count_ptr = temp.count_ptr;
-        count_ptr++;
+        delete raw_pointer_;
     };
 
-    SmartPtr& operator=(const SmartPtr& temp) {
-        if (count_ptr > 1){
-            count_ptr--;
-        }
-        else {
-            delete a_;
-        }
-        a_ = temp.a_;
-        count_ptr = temp.count_ptr;
-        count_ptr++;
+    SmartPtr(T* ptr) {
+        raw_pointer_ = ptr;
+    };
+
+    SmartPtr(const SmartPtr&) = delete;
+
+    SmartPtr(SmartPtr&& a) {
+        raw_pointer_ = a.release();
+    };
+
+    SmartPtr& operator=(const SmartPtr&) = delete;
+
+    SmartPtr& operator=(nullptr_t) {
+        reset(nullptr);
         return *this;
     };
 
-    A& operator*() {
-        assert(a_);
-        return *a_;
-    }
+    SmartPtr& operator=(SmartPtr&& a) {
+        raw_pointer_ = a.release();
+        return *this;
+    };
 
-    A* operator->() {
-        return a_;
-    }
+    T& operator*() const {
+        return *get();
+    };
 
-    A* release() {
-        /*отдаёт владение указателем |a_| */
-        A* a = a_;
-        a_ = nullptr;
+    T* operator->() const {
+        return get();
+    };
+
+    T* release() {
+        auto a = raw_pointer_;
+        raw_pointer_ = nullptr;
         return a;
-    }
+    };
 
-    void* reset(A* x) {
-        /*берёт владение указателем |x| */
-        delete a_;
-        a_ = x;
-    }
+    void reset(T* ptr) {
+        delete raw_pointer_;
+        raw_pointer_ = ptr;
+    };
 
-    A* get() { return a_; }
+    void swap(SmartPtr& other) {
+        std::swap(raw_pointer_, other.raw_pointer_);
+    };
+
+    T* get() const {
+        return raw_pointer_;
+    };
 
 private:
-    A * a_;
-    int count_ptr;
+    T* raw_pointer_;
 };
-
-
-int main() {
-    A temp;
-    SmartPtr p1(&temp);
-    SmartPtr p2(&temp);
-    SmartPtr p3(p2);
-    p3 = p1;
-}
