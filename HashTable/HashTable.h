@@ -1,6 +1,3 @@
-
-
-
 template<class K, class V>
 class HashTable {
 private:
