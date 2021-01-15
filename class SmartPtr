@@ -38,6 +38,7 @@ public:
     };
 
     T* release() {
+        delete raw_pointer_;
         auto a = raw_pointer_;
         raw_pointer_ = nullptr;
         return a;
