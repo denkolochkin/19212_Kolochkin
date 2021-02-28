@@ -7,8 +7,8 @@ public class Minus implements Command {
 	@Override
 	public void execute(Stack<Character> stack, Character command,
 	                    Character direction, ArrayList<ArrayList<Character>> field) {
-		int a = stack.pop();
-		int b = stack.pop();
+		int a = stack.pop() - '0';
+		int b = stack.pop() - '0';
 		stack.push((char) (b - a));
 	}
 }
