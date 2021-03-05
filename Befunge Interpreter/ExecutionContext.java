@@ -58,48 +58,26 @@ public class ExecutionContext {
 		}
 	}
 
-	public List<List<Character>> getField() {
-		return field;
-	}
+	public List<List<Character>> getField() { return field; }
 
-	public Stack<Character> getStack() {
-		return stack;
-	}
+	public Stack<Character> getStack() { return stack; }
 
-	public int getX() {
-		return x;
-	}
+	public int getX() { return x; }
 
-	public int getY() {
-		return y;
-	}
+	public int getY() { return y; }
 
-	public Character getDirection() {
-		return direction;
-	}
+	public Character getDirection() { return direction; }
 
-	public Character getCommand() {
-		return command;
-	}
+	public Character getCommand() { return command; }
 
-	public String getCommandName() {
-		return commandName;
-	}
+	public String getCommandName() { return commandName; }
 
-	public boolean getEnd() {
-		return end;
-	}
+	public boolean getEnd() { return end; }
 
-	public void setDirection(Character a) {
-		direction = a;
-	}
+	public void setDirection(Character a) { direction = a; }
 
-	public void setEnd(boolean a) {
-		end = a;
-	}
+	public void setEnd(boolean a) { end = a; }
 
-	public void setCommand(Character a) {
-		command = a;
-	}
+	public void setCommand(Character a) { command = a; }
 
 }
