@@ -1,61 +1,49 @@
 package ru.nsu.kolochkin.Befunge;
 
-import java.lang.reflect.Method;
+import ru.nsu.kolochkin.Befunge.commands.Command;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
+/**
+ * This class creates objects of commands
+ * by the name of the command.
+ */
 public class CommandFactory {
-	private static HashMap<String, Boolean> cacheMap = new HashMap<>();
+	static Logger log = Logger.getLogger(Interpreter.class.getName());
+	/**
+	 * Used for caching of commands objects.
+	 */
+	private static HashMap<String, Command> classMap = new HashMap<>();
 
-	private static HashMap<String, Class<?>> classMap = new HashMap<>();
-
-	CommandFactory() {
-		cacheMap.put("ChangerVertexes", false);
-		cacheMap.put("Comparison", false);
-		cacheMap.put("CopierVertex", false);
-		cacheMap.put("Deleter", false);
-		cacheMap.put("Division", false);
-		cacheMap.put("Invert", false);
-		cacheMap.put("Minus", false);
-		cacheMap.put("Mod", false);
-		cacheMap.put("Multiplication", false);
-		cacheMap.put("NumberPrint", false);
-		cacheMap.put("Plus", false);
-		cacheMap.put("SymbolPrint", false);
-		cacheMap.put("SymbolRequest", false);
-		cacheMap.put("Constant", false);
-		cacheMap.put("Direction", false);
-		cacheMap.put("Put", false);
-		cacheMap.put("Get", false);
-	}
-
-	public static Class<?> createCommand(String commandName) {
+	/**
+	 * This method returns finished object
+	 * of the command. If we try to load
+	 * class not the first time, will return
+	 * finished object from classMap.
+	 */
+	public static Command createCommand(String commandName) {
 		Class<?> cl = null;
-		if (!cacheMap.get(commandName)) {
+		if (!classMap.containsKey(commandName)) {
 			try {
 				cl = Class.forName("ru.nsu.kolochkin.Befunge.commands." + commandName);
-				cacheMap.put(commandName, true);
+				log.info("Trying to create command " + commandName);
 			} catch (ClassNotFoundException e) {
+				log.throwing("CommandFactory", "createCommand", e);
 				return null;
 			}
-			classMap.put(commandName, cl);
-			return cl;
+			Object o;
+			try {
+				o = cl.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				log.throwing("CommandFactory", "createCommand", e);
+				return null;
+			}
+			Command c = (Command) o;
+			classMap.put(commandName, c);
+			return c;
 		}
 		else {
 			return classMap.get(commandName);
 		}
-	}
-
-	public static Object createInstance(Class<?> cl) {
-		Object o;
-		try {
-			o = cl.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException();
-		}
-		return o;
-	}
-
-	public static Method[] createMethods(Class<?> cl) {
-		return cl.getDeclaredMethods();
 	}
 }

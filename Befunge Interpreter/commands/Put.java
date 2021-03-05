@@ -1,14 +1,22 @@
 package ru.nsu.kolochkin.Befunge.commands;
 
-import java.util.ArrayList;
-import java.util.Stack;
+import ru.nsu.kolochkin.Befunge.ExecutionContext;
+import ru.nsu.kolochkin.Befunge.Interpreter;
+import org.apache.log4j.Logger;
 
 public class Put implements Command {
+	Logger log = Logger.getLogger(Interpreter.class.getName());
+	/**
+	 * This method takes two closest
+	 * numbers on the stack like a position
+	 * and sets on the field a next symbol
+	 * on the stack on this position.
+	 */
 	@Override
-	public void execute(Stack<Character> stack, Character command,
-	                    Character direction, ArrayList<ArrayList<Character>> field) {
-		int y = stack.pop();
-		int x = stack.pop();
-		field.get(y).set(x, stack.pop());
+	public void execute(ExecutionContext context) {
+		log.trace("p is executed");
+		int y = context.getStack().pop();
+		int x = context.getStack().pop();
+		context.getField().get(y).set(x, context.getStack().pop());
 	}
 }

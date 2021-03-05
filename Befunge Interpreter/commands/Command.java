@@ -1,9 +1,11 @@
 package ru.nsu.kolochkin.Befunge.commands;
 
-import java.util.ArrayList;
-import java.util.Stack;
+import ru.nsu.kolochkin.Befunge.ExecutionContext;
 
 public interface Command {
-	void execute(Stack<Character> stack, Character command,
-	                     Character direction,  ArrayList<ArrayList<Character>> field);
+	/**
+	 * Virtual method, that overrides
+	 * if every command.
+	 */
+	void execute(ExecutionContext context);
 }

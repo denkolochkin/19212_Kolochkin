@@ -1,15 +1,22 @@
 package ru.nsu.kolochkin.Befunge.commands;
 
-import java.util.ArrayList;
-import java.util.Stack;
+import ru.nsu.kolochkin.Befunge.ExecutionContext;
+import ru.nsu.kolochkin.Befunge.Interpreter;
+import org.apache.log4j.Logger;
 
 public class ChangerVertexes implements Command {
+	Logger log = Logger.getLogger(Interpreter.class.getName());
+
+	/**
+	 * This method swaps two closest
+	 * objects on the stack.
+	 */
 	@Override
-	public void execute(Stack<Character> stack, Character command,
-	                    Character direction, ArrayList<ArrayList<Character>> field) {
-		Character a = stack.pop();
-		Character b = stack.pop();
-		stack.push(a);
-		stack.push(b);
+	public void execute(ExecutionContext context) {
+		log.trace("\\ is executed");
+		Character a = context.getStack().pop();
+		Character b = context.getStack().pop();
+		context.getStack().push(a);
+		context.getStack().push(b);
 	}
 }

@@ -1,14 +1,21 @@
 package ru.nsu.kolochkin.Befunge.commands;
 
-import java.util.ArrayList;
-import java.util.Stack;
+import ru.nsu.kolochkin.Befunge.ExecutionContext;
+import ru.nsu.kolochkin.Befunge.Interpreter;
+import org.apache.log4j.Logger;
 
 public class Minus implements Command {
+	Logger log = Logger.getLogger(Interpreter.class.getName());
+	/**
+	 * This method subtracts two
+	 * closest numbers on the stack
+	 * and pushes a result.
+	 */
 	@Override
-	public void execute(Stack<Character> stack, Character command,
-	                    Character direction, ArrayList<ArrayList<Character>> field) {
-		int a = stack.pop() - '0';
-		int b = stack.pop() - '0';
-		stack.push((char) (b - a));
+	public void execute(ExecutionContext context) {
+		log.trace("- is executed");
+		int a = context.getStack().pop() - '0';
+		int b = context.getStack().pop() - '0';
+		context.getStack().push((char) (b - a));
 	}
 }

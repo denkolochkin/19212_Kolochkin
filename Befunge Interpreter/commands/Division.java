@@ -1,15 +1,21 @@
 package ru.nsu.kolochkin.Befunge.commands;
 
-import java.util.ArrayList;
-import java.util.Stack;
+import ru.nsu.kolochkin.Befunge.ExecutionContext;
+import ru.nsu.kolochkin.Befunge.Interpreter;
+import org.apache.log4j.Logger;
 
 public class Division implements Command {
+	Logger log = Logger.getLogger(Interpreter.class.getName());
+	/**
+	 * This method divisions two closest
+	 * numbers of the stack and pushes a result.
+	 */
 	@Override
-	public void execute(Stack<Character> stack, Character command,
-	                    Character direction, ArrayList<ArrayList<Character>> field) {
-		int a = stack.pop() - '0';
-		int b = stack.pop() - '0';
+	public void execute(ExecutionContext context) {
+		log.trace("/ is executed");
+		int a = context.getStack().pop() - '0';
+		int b = context.getStack().pop() - '0';
 		Character c = (char) (b / a);
-		stack.push(c);
+		context.getStack().push(c);
 	}
 }
