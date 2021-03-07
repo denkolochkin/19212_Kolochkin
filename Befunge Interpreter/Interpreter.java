@@ -30,8 +30,8 @@ public class Interpreter extends ExecutionContext {
 		try {
 			log.info("Loading properties...");
 			properties.load(new FileReader("/Users/deniskolockin/" +
-										   "IdeaProjects/Befunge/src/ru/nsu/" +
-										   "kolochkin/Befunge/config.properties"));
+					"IdeaProjects/Befunge/src/ru/nsu/" +
+					"kolochkin/Befunge/config.properties"));
 		} catch (IOException e) {
 			log.error("Loading properties error.");
 			e.printStackTrace();
@@ -60,8 +60,8 @@ public class Interpreter extends ExecutionContext {
 	public void read() {
 		log.info("Reading...");
 		try (FileReader fr = new FileReader("/Users/deniskolockin/" +
-										   "IdeaProjects/Befunge/" +
-										   "BefungePrograms/fib.txt")) {
+				"IdeaProjects/Befunge/" +
+				"BefungePrograms/fib.txt")) {
 			Scanner scanner = new Scanner(fr);
 			int countY = 0;
 			while (scanner.hasNextLine()) {

@@ -11,6 +11,6 @@ public class SymbolPrint implements Command {
 	public void execute(ExecutionContext context) {
 		log.trace(", is executed");
 		Character c = context.getStack().pop();
-		System.out.print(c);
+		context.getOutputStream().print(c);
 	}
 }
