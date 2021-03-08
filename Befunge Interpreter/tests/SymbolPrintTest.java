@@ -10,9 +10,9 @@ public class SymbolPrintTest {
 	public void execute() {
 		ExecutionContext c = new ExecutionContext();
 		SymbolPrint s = new SymbolPrint();
-		System.setOut(c.getOutputStream());
-		c.getStack().push('z');
+		Character z = 'z';
+		c.getStack().push(z);
 		s.execute(c);
-		assertEquals(c.getOutputStream().toString(), 'z');
+		assertTrue(c.getOutputStream().getBuffer().contains(z));
 	}
 }

@@ -1,6 +1,5 @@
 package ru.nsu.kolochkin.Befunge;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -29,9 +28,10 @@ public class ExecutionContext {
 
 	protected boolean end = false;
 
-	protected DataInputStream inputStream = new DataInputStream(System.in);
+	protected MyInputStream inputStream = new MyInputStream();
 
-	protected PrintStream outputStream = new PrintStream(System.out);
+	protected MyOutputStream outputStream = new MyOutputStream(inputStream.getBuffer());
+
 	/**
 	 * This method moves pointer
 	 * in the indicated direction.
@@ -79,9 +79,9 @@ public class ExecutionContext {
 
 	public boolean getEnd() { return end; }
 
-	public DataInputStream getInputStream() { return inputStream; }
+	public MyInputStream getInputStream() { return inputStream; }
 
-	public PrintStream getOutputStream() { return outputStream; }
+	public MyOutputStream getOutputStream() { return outputStream; }
 
 	public void setDirection(Character a) { direction = a; }
 
