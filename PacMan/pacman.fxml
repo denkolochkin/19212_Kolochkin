@@ -1,0 +1,11 @@
+<?import pacman.View?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane fx:controller="pacman.Controller" style="-fx-background-color: black;" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <View fx:id="score" />
+    </top>
+    <center>
+        <View fx:id="view" rowCount="31" columnCount="28" />
+    </center>
+</BorderPane>
