@@ -1,7 +1,5 @@
 package pacman;
 
-import javafx.scene.control.Cell;
-
 import java.io.*;
 import java.util.*;
 
@@ -26,7 +24,9 @@ public class Model {
 
 	Direction pacmanDirection;
 
-	Direction ghost1Direction;
+	Direction ghost1Direction = Direction.up;
+
+	Direction ghost2Direction = Direction.up;
 
 	private int pacmanX;
 
@@ -41,7 +41,6 @@ public class Model {
 	private int ghost2Y = 0;
 
 	public Model() { startNewGame(); }
-
 
 	public void initializeLevel() {
 		rowCount = 31;
@@ -96,6 +95,10 @@ public class Model {
 	}
 
 	public void movePacman() {
+		if (grid[pacmanX][pacmanY] == CellValue.ghost1 || grid[pacmanX][pacmanY] == CellValue.ghost2) {
+			gameOver = true;
+			return;
+		}
 		if (pacmanDirection == Direction.none) {
 			return;
 		}
@@ -164,48 +167,111 @@ public class Model {
 		}
 	}
 
-	private void swap(CellValue a, CellValue b) {
-		CellValue tmp = a;
-		a = b;
-		b = tmp;
-	}
-
-	//todo method for move
-	public boolean moveGhost1() {
+	public void moveGhost1() {
 		if (grid[ghost1X][ghost1Y] == CellValue.pacman) {
 			gameOver = true;
-			grid[pacmanX][pacmanY] = CellValue.ghost1;
-			return false;
+			return;
 		}
-		if (grid[ghost1X - 1][ghost1Y] != CellValue.wall) {
+		if (ghost2Direction == Direction.up) {
 			CellValue tmp = grid[ghost1X - 1][ghost1Y];
+			if (tmp == CellValue.wall || tmp == CellValue.ghost2) {
+				int index = (int) (Math.random() * 4);
+				ghost1Direction = Direction.values()[index];
+				return;
+			}
 			grid[ghost1X - 1][ghost1Y] = grid[ghost1X][ghost1Y];
 			grid[ghost1X][ghost1Y] = tmp;
 			ghost1X--;
-			return true;
+			return;
 		}
-		if (grid[ghost1X][ghost1Y + 1] != CellValue.wall) {
+		if (ghost1Direction == Direction.right) {
 			CellValue tmp = grid[ghost1X][ghost1Y + 1];
+			if (tmp == CellValue.wall || tmp == CellValue.ghost2) {
+				int index = (int) (Math.random() * 4);
+				ghost1Direction = Direction.values()[index];
+				return;
+			}
 			grid[ghost1X][ghost1Y + 1] = grid[ghost1X][ghost1Y];
 			grid[ghost1X][ghost1Y] = tmp;
 			ghost1Y++;
-			return true;
+			return;
 		}
-		if (grid[ghost1X + 1][ghost1Y] != CellValue.wall) {
+		if (ghost1Direction == Direction.down) {
 			CellValue tmp = grid[ghost1X + 1][ghost1Y];
+			if (tmp == CellValue.wall || tmp == CellValue.ghost2) {
+				int index = (int) (Math.random() * 4);
+				ghost1Direction = Direction.values()[index];
+				return;
+			}
 			grid[ghost1X + 1][ghost1Y] = grid[ghost1X][ghost1Y];
 			grid[ghost1X][ghost1Y] = tmp;
 			ghost1X++;
-			return true;
+			return;
 		}
-		if (grid[ghost1X][ghost1Y - 1] != CellValue.wall) {
+		if (ghost1Direction == Direction.left) {
 			CellValue tmp = grid[ghost1X][ghost1Y - 1];
+			if (tmp == CellValue.wall || tmp == CellValue.ghost2) {
+				int index = (int) (Math.random() * 4);
+				ghost1Direction = Direction.values()[index];
+				return;
+			}
 			grid[ghost1X][ghost1Y - 1] = grid[ghost1X][ghost1Y];
 			grid[ghost1X][ghost1Y] = tmp;
 			ghost1Y--;
-			return true;
 		}
-		return true;
+	}
+	public void moveGhost2() {
+		if (grid[ghost2X][ghost2Y] == CellValue.pacman) {
+			gameOver = true;
+			return;
+		}
+		if (ghost2Direction == Direction.up) {
+			CellValue tmp = grid[ghost2X - 1][ghost2Y];
+			if (tmp == CellValue.wall || tmp == CellValue.ghost1) {
+				int index = (int) (Math.random() * 4);
+				ghost2Direction = Direction.values()[index];
+				return;
+			}
+			grid[ghost2X - 1][ghost2Y] = grid[ghost2X][ghost2Y];
+			grid[ghost2X][ghost2Y] = tmp;
+			ghost2X--;
+			return;
+		}
+		if (ghost2Direction == Direction.right) {
+			CellValue tmp = grid[ghost2X][ghost2Y + 1];
+			if (tmp == CellValue.wall || tmp == CellValue.ghost1) {
+				int index = (int) (Math.random() * 4);
+				ghost2Direction = Direction.values()[index];
+				return;
+			}
+			grid[ghost2X][ghost2Y + 1] = grid[ghost2X][ghost2Y];
+			grid[ghost2X][ghost2Y] = tmp;
+			ghost2Y++;
+			return;
+		}
+		if (ghost2Direction == Direction.down) {
+			CellValue tmp = grid[ghost2X + 1][ghost2Y];
+			if (tmp == CellValue.wall || tmp == CellValue.ghost1) {
+				int index = (int) (Math.random() * 4);
+				ghost2Direction = Direction.values()[index];
+				return;
+			}
+			grid[ghost2X + 1][ghost2Y] = grid[ghost2X][ghost2Y];
+			grid[ghost2X][ghost2Y] = tmp;
+			ghost2X++;
+			return;
+		}
+		if (ghost2Direction == Direction.left) {
+			CellValue tmp = grid[ghost2X][ghost2Y - 1];
+			if (tmp == CellValue.wall || tmp == CellValue.ghost1) {
+				int index = (int) (Math.random() * 4);
+				ghost2Direction = Direction.values()[index];
+				return;
+			}
+			grid[ghost2X][ghost2Y - 1] = grid[ghost2X][ghost2Y];
+			grid[ghost2X][ghost2Y] = tmp;
+			ghost2Y--;
+		}
 	}
 
 	public CellValue getCellValue(int row, int column) { return this.grid[row][column]; }

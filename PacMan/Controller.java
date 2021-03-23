@@ -3,7 +3,6 @@ package pacman;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -24,8 +23,10 @@ public class Controller implements EventHandler<KeyEvent> {
 			public void run() {
 				Platform.runLater(new Runnable() {
 					public void run() {
+						model.moveGhost1();
+						model.moveGhost2();
 						model.movePacman();
-						if (model.moveGhost1()) {
+						if (!model.gameOver) {
 							view.update(model);
 						} else {
 							timer.cancel();
