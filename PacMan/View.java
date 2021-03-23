@@ -63,7 +63,6 @@ public class View extends Group {
 		for (int y = 0; y < rowCount; y++) {
 			for (int x = 0; x < columnCount; x++){
 				CellValue value = model.getCellValue(y, x);
-				score = model.getScore();
 				if (value == CellValue.wall) {
 					field[y][x].setImage(wallImage);
 				}

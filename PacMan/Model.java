@@ -18,8 +18,6 @@ public class Model {
 
 	boolean gameOver = false;
 
-	private int score;
-
 	private CellValue[][] grid;
 
 	Direction pacmanDirection;
@@ -132,12 +130,6 @@ public class Model {
 			}
 		}
 		if (pacmanDirection == Direction.up) {
-			if (grid[pacmanX - 1][pacmanY] == CellValue.smallDot) {
-				score += 10;
-			}
-			if (grid[pacmanX - 1][pacmanY] == CellValue.bigDot) {
-				score += 50;
-			}
 			if (grid[pacmanX - 1][pacmanY] == CellValue.wall) {
 				pacmanDirection = Direction.none;
 				return;
@@ -149,12 +141,7 @@ public class Model {
 			}
 		}
 		if (pacmanDirection == Direction.down) {
-			if (grid[pacmanX + 1][pacmanY] == CellValue.smallDot) {
-				score += 10;
-			}
-			if (grid[pacmanX + 1][pacmanY] == CellValue.bigDot) {
-				score += 50;
-			}
+
 			if (grid[pacmanX + 1][pacmanY] == CellValue.wall) {
 				pacmanDirection = Direction.none;
 				return;
@@ -283,7 +270,5 @@ public class Model {
 	public void setCurrentDirection(Direction direction) {
 		pacmanDirection = direction;
 	}
-
-	public int getScore() { return score; }
 
 }
