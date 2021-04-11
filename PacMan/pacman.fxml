@@ -1,8 +1,22 @@
-<?import pacman.View?>
+<?import ru.nsu.kolochkin.pacman.View?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Label?>
 
-<BorderPane fx:controller="pacman.Controller" style="-fx-background-color: black;" xmlns:fx="http://javafx.com/fxml">
+<BorderPane fx:controller="ru.nsu.kolochkin.pacman.Controller" style="-fx-background-color: #000000;" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <BorderPane prefHeight="30" style="-fx-background-color: #1d095a; -fx-padding: 10px, 5px, 10px, 5px" >
+
+        </BorderPane>
+    </top>
     <center>
         <View fx:id="view" rowCount="31" columnCount="28" />
     </center>
+    <bottom>
+        <BorderPane prefHeight="30" style="-fx-background-color: #1d095a; -fx-padding: 10px, 5px, 10px, 5px" >
+            <left><Label fx:id="scoreLabel" style="-fx-font-size: 150%; -fx-text-fill: #817878" /></left>
+            <center><Label fx:id="infoLabel" style="-fx-font-size: 150%; -fx-text-fill: #817878" /></center>
+            <right><Label fx:id="levelLabel" style="-fx-font-size: 150%; -fx-text-fill: #817878"/></right>
+        </BorderPane>
+    </bottom>
 </BorderPane>
+
