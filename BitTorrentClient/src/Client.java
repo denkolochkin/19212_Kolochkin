@@ -2,128 +2,109 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
-public class Client extends TorrentClient {
+public class Client {
 
-    private String currentServerAddress;
+    private final MetaParser metaParser = new MetaParser();
 
-    private int numberOfPieces;
+    private static int serverPort;
 
-    private int fileSize;
+    private List<String> party;
 
-    private String fileName;
+    private String generateGetPieceMessage(int index_) { return "Get" + index_; }
 
-    private String SHA;
-
-    private String meta;
-
-    private void parseMeta(String meta) {
-        int index = 0;
-        StringBuilder address = new StringBuilder();
-        while(meta.charAt(index) != '[') {
-            address.append(meta.charAt(index));
-            index++;
-        }
-        currentServerAddress = address.toString();
-        index++;
-        StringBuilder name = new StringBuilder();
-        while(meta.charAt(index) != ':') {
-            name.append(meta.charAt(index));
-            index++;
-        }
-        fileName = name.toString();
-        index += 2;
-        StringBuilder number = new StringBuilder();
-        while (meta.charAt(index) != ':') {
-            number.append(meta.charAt(index));
-            index++;
-        }
-        index += 2;
-        StringBuilder size = new StringBuilder();
-        while (meta.charAt(index) != ']') {
-            size.append(meta.charAt(index));
-            index++;
-        }
-        fileSize = Integer.parseInt(size.toString());
-        numberOfPieces = Integer.parseInt(number.toString());
-    }
-
-    private void saveMeta() {
-        File file = new File("test.torrent");
-        FileReader fileReader = null;
+    private void sendToAll(String message) {
         try {
-            fileReader = new FileReader("test.torrent");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        char[] array = new char[(int)file.length()];
-        try {
-            assert fileReader != null;
-            int n = fileReader.read(array);
-            if (n == 0) {
-                log("reading error");
+            for (String i : party) {
+                Socket socket_ = new Socket(metaParser.getCurrentServerAddress(), Integer.parseInt(i));
+                PrintWriter writer_ = new PrintWriter(socket_.getOutputStream());
+                InputStreamReader streamReader_ = new InputStreamReader(socket_.getInputStream());
+                BufferedReader reader_ = new BufferedReader(streamReader_);
+                writer_.println(message);
+                writer_.flush();
+                log("Send to " + Integer.parseInt(i) + " > " + message);
+                log("Received < " + reader_.readLine());
+                writer_.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        meta = String.copyValueOf(array);
     }
 
-    private boolean checkHandshake(String handshake) {
-        StringBuilder tmp = new StringBuilder();
-        for (int i = 20; i < 60; i++) {
-            tmp.append(handshake.charAt(i));
+    private void savePiece(byte[] piece, int index) {
+        String path = "pieces/" + index;
+        File downloadedFile = new File(path + metaParser.getFileName());
+        FileOutputStream downloadedFileStream;
+        try {
+            downloadedFileStream = new FileOutputStream(path + metaParser.getFileName());
+            boolean result = downloadedFile.createNewFile();
+            if (!result) {
+                log("file already exists");
+            }
+            downloadedFileStream.write(piece);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return tmp.toString().equals(SHA);
     }
 
-    private String generateGetPieceMessage(int index_) { return "Get" + index_; }
-
-    public void startClient() {
+    public void startClient(boolean isLeech, List<String> party_, int serverPort_) {
+        serverPort = serverPort_;
+        party = party_;
         if (isLeech) {
             try {
-                saveMeta();
-                parseMeta(meta);
                 int count = 0;
+                int partyIndex = 0;
                 String path = "(Downloaded)";
-                File downloadedFile = new File(path + fileName);
-                FileOutputStream downloadedFileStream = new FileOutputStream(path + fileName);
+                File downloadedFile = new File(path + metaParser.getFileName());
+                FileOutputStream downloadedFileStream = new FileOutputStream(path + metaParser.getFileName());
                 boolean result = downloadedFile.createNewFile();
-                isLeech = true;
                 if (!result) {
                     log("file already exists");
                 }
                 //main loop for downloading pieces.
                 //name format of pieces - [number of piece]fileName.
                 //for instance - 3file.txt
-                while (count < numberOfPieces) {
-                    Socket socket = new Socket(currentServerAddress, 4242);
-                    PrintWriter writer = new PrintWriter(socket.getOutputStream());
-                    InputStreamReader streamReader = new InputStreamReader(socket.getInputStream());
-                    BufferedReader reader = new BufferedReader(streamReader);
+                Socket currentSocket;
+                PrintWriter writer;
+                BufferedReader reader;
+                int currentPort = Integer.parseInt(party.get(partyIndex));
+                while (count < metaParser.getNumberOfPieces()) {
+                    currentSocket = new Socket(metaParser.getCurrentServerAddress(), currentPort);
+                    writer = new PrintWriter(currentSocket.getOutputStream());
+                    InputStreamReader streamReader = new InputStreamReader(currentSocket.getInputStream());
+                    reader = new BufferedReader(streamReader);
                     Handshake handshake = new Handshake();
-                    SHA = SHA1.generateSHA(count + fileName);
-                    String handshake_ = handshake.generateHandshake(InetAddress.getLocalHost().getHostAddress(), SHA);
-                    writer.println(handshake_);
+                    String SHA = SHA1.generateSHA(count + metaParser.getFileName());
+                    String shake = handshake.generateHandshake(InetAddress.getLocalHost().getHostAddress(), SHA);
+                    writer.println(shake);
                     writer.flush();
-                    log("Send > " + handshake_);
+                    log("Send > " + shake);
                     String answer = reader.readLine();
                     log("Received < " + answer);
-                    if (checkHandshake(answer)) {
+                    if (handshake.checkHandshake(answer, SHA)) {
                         writer.println(generateGetPieceMessage(count));
                         writer.flush();
                         log("Send > " + generateGetPieceMessage(count));
                         byte[] piece = reader.readLine().getBytes(StandardCharsets.UTF_8);
-                        downloadedPieces.add(piece);
+                        Server.getDownloadedPieces().add(piece);
+                        sendToAll("Have" + count);
                         downloadedFileStream.write(piece);
+                        savePiece(piece, count);
                         count++;
-                        log("Downloaded - " + (double) count / numberOfPieces * 100 + "%");
+                        log("Downloaded - " + (double) count / metaParser.getNumberOfPieces() * 100 + "%");
+                    } else {
+                        partyIndex++;
+                        if (partyIndex < party.size()) {
+                            currentPort = Integer.parseInt(party.get(partyIndex));
+                        } else {
+                            partyIndex = 0;
+                        }
                     }
-                    reader.close();
+                    //reader.close();
                 }
-                if (downloadedFile.length() == fileSize) {
+                if (downloadedFile.length() == metaParser.getFileSize()) {
                     log("Downloading has been ended successful.");
-                    isLeech = false;
                 }
             } catch (IOException e) {
                 log("Error " + e.getMessage());
@@ -132,9 +113,7 @@ public class Client extends TorrentClient {
     }
 
     private static void log(String message) {
-        System.out.println("[" + Thread.currentThread().getName() + "] " + message);
+        System.out.println("[" + Thread.currentThread().getName() + serverPort +  "] " + message);
     }
 
 }
-
-

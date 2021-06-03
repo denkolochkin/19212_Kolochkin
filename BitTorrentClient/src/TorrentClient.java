@@ -1,22 +1,26 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TorrentClient {
 
-	protected static boolean isSeed = false;
+	static boolean isLeech = false;
 
-	protected static boolean isLeech = false;
+	static int serverPort;
 
-	protected static List<byte[]> downloadedPieces = new ArrayList<>();
+	static List<String> party = new ArrayList<>();
 
+	//args - leech/seed/peer, serverPort, ports of participants of the swarm ...
 	public static void main(String[] args) {
-		isLeech =  args[0].equals("leech");
+		isLeech = args[0].equals("leech");
+		serverPort = Integer.parseInt(args[1]);
+		party.addAll(Arrays.asList(args).subList(2, args.length));
 		Thread serverThread = new Thread(() -> {
 			Thread.currentThread().setName("Server");
 			Server server = new Server();
 			try {
-				server.startServer();
+				server.startServer(serverPort);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -24,7 +28,7 @@ public class TorrentClient {
 		Thread clientThread = new Thread(() -> {
 			Thread.currentThread().setName("Client");
 			Client client = new Client();
-			client.startClient();
+			client.startClient(isLeech, party, serverPort);
 		});
 		serverThread.start();
 		clientThread.start();
