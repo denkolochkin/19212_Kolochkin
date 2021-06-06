@@ -9,7 +9,7 @@ public class MetaParser {
 
 	private String currentServerAddress;
 
-	private int numberOfPieces;
+	private static int numberOfPieces;
 
 	private int fileSize;
 
@@ -72,7 +72,7 @@ public class MetaParser {
 		numberOfPieces = Integer.parseInt(number.toString());
 	}
 
-	public int getNumberOfPieces() { return numberOfPieces; }
+	public static int getNumberOfPieces() { return numberOfPieces; }
 
 	public int getFileSize() { return fileSize; }
 
@@ -83,5 +83,4 @@ public class MetaParser {
 	private void log() {
 		System.out.println("[" + Thread.currentThread().getName() + currentServerAddress +  "] " + "reading error");
 	}
-
 }

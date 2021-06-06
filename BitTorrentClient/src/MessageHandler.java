@@ -6,7 +6,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.List;
+import java.util.HashMap;
 
 public class MessageHandler {
 
@@ -71,10 +71,14 @@ public class MessageHandler {
 	public int checkMessage(ByteBuffer buffer, int index) {
 		if ((char) buffer.get(0) == 'G') {
 			isPieceMessage = true;
+			index = buffer.get(3) - '0';
 		}
 		if ((char) buffer.get(0) == '1' && (char)buffer.get(1) == '9') {
 			isHandshake = true;
 			index++;
+			if (index == MetaParser.getNumberOfPieces()) {
+				index = 0;
+			}
 		}
 		if ((char) buffer.get(0) == 'H') {
 			isHave = true;
@@ -82,13 +86,13 @@ public class MessageHandler {
 		return index;
 	}
 
-	public void send(List<byte[]> downloadedPieces, int index,
+	public void send(HashMap<Integer, Boolean> downloadedPieces, int index,
 	                 ByteBuffer buffer, SocketChannel socketChannel, String path) {
 		if (isHandshake) {
 			Handshake handshake = new Handshake();
 			String handshake_ = null;
 			try {
-				if (downloadedPieces.size() > index) {
+				if (downloadedPieces.get(index)) {
 					handshake_ = handshake.generateHandshake(InetAddress.getLocalHost().getHostAddress(),
 							SHA1.generateSHA(index + path + ".txt"));
 				} else {

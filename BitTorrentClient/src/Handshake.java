@@ -1,5 +1,4 @@
 public class Handshake {
-
 	public boolean checkHandshake(String handshake, String SHA) {
 		StringBuilder tmp = new StringBuilder();
 		for (int i = 20; i < 60; i++) {
