@@ -4,8 +4,4 @@ Hello from server!
 It's a long text.
 
 
-
-Rooma lox
-
-
 Thas false
